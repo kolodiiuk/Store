@@ -1,6 +1,6 @@
 using Laundry.Domain.Entities;
 
-namespace Laundry.Domain.Interfaces;
+namespace Laundry.Domain.Contracts.Repositories;
 
 public interface ICouponRepository : IGenericRepository<Coupon>
 {

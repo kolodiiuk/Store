@@ -5,6 +5,5 @@ public enum OrderStatus
     Created,
     Approved,
     Collected,
-    InProcess,
     Delivered,
 }

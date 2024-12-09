@@ -1,6 +1,5 @@
 namespace Laundry.Domain.Interfaces;
 
-public class AuthController
+public class UpdateServiceDto
 {
-    
 }

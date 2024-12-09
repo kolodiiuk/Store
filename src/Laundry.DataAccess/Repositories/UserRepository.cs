@@ -3,7 +3,7 @@ using Laundry.DataAccess.Repositories;
 using Laundry.Domain.Entities;
 using Laundry.Domain.Interfaces;
 
-namespace Laundry.Api.DataAccess.Repositories;
+namespace Laundry.DataAccess.Repositories;
 
 public class UserRepository : GenericRepository<User>, IUserRepository
 {

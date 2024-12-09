@@ -1,6 +1,6 @@
 ﻿namespace Laundry.Domain.Enums;
 
-public enum ServiceType
+public enum ServiceCategory
 {
     Washing,
     DryCleaning,
