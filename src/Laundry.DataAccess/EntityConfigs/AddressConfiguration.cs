@@ -12,30 +12,41 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         
         builder.HasKey(a => a.Id);
         
+        builder.HasMany(a => a.Orders)
+            .WithOne(o => o.Address)
+            .HasForeignKey(o => o.AddressId);
+        
         builder.HasOne(a => a.User)
             .WithMany(u => u.Addresses)
-            .HasForeignKey(a => a.UserId);
+            .HasForeignKey(a => a.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(a => a.Id)
             .HasColumnName("address_id");
 
         builder.Property(a => a.Apartments)
-            .HasColumnName("apartments");
+            .HasColumnName("apartments")
+            .HasMaxLength(20);
         
         builder.Property(a => a.House)
             .HasColumnName("house")
+            .HasMaxLength(20)
             .IsRequired();
         
         builder.Property(a => a.Street)
             .HasColumnName("street")
+            .HasMaxLength(100)
             .IsRequired();
         
         builder.Property(a => a.District)
             .HasColumnName("district")
+            .HasMaxLength(100)
             .IsRequired();
         
         builder.Property(a => a.City)
             .HasColumnName("city")
+            .HasMaxLength(100)
             .IsRequired();
         
         builder.Property(a => a.UserId)

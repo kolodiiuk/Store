@@ -23,6 +23,6 @@ public class Order : BaseEntity
     public Coupon? Coupon { get; set; }
     public User User { get; set; }
     public Address Address { get; set; }
-    public Feedback? Feedback { get; set; }
-    public List<OrderItem> Items { get; set; }
+    public ICollection<Feedback> Feedbacks { get; set; }
+    public ICollection<OrderItem> OrderItems { get; set; }
 }

@@ -10,4 +10,7 @@ public class Service : BaseEntity
     public decimal PricePerUnit { get; set; }
     public UnitType UnitType { get; set; }
     public bool IsAvailable { get; set; }
+    public ICollection<ServiceCoupon> ServiceCoupons { get; set; }
+    public ICollection<BasketItem> BasketItems { get; set; }
+    public ICollection<OrderItem> OrderItems { get; set; }
 }

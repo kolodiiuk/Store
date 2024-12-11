@@ -13,9 +13,10 @@ public class FeedbackConfiguration : IEntityTypeConfiguration<Feedback>
         builder.HasKey(f => f.Id);
         
         builder.HasOne(f => f.Order) 
-            .WithOne(o => o.Feedback) 
-            .HasForeignKey<Feedback>(f => f.OrderId) 
-            .IsRequired();
+            .WithMany(o => o.Feedbacks) 
+            .HasForeignKey(f => f.OrderId) 
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.Property(f => f.Id)
             .HasColumnName("feedback_id");
@@ -25,6 +26,7 @@ public class FeedbackConfiguration : IEntityTypeConfiguration<Feedback>
             .IsRequired();
         
         builder.Property(f => f.Comment)
+            .HasMaxLength(1000)
             .HasColumnName("comment");
         
         builder.Property(f => f.OrderId)

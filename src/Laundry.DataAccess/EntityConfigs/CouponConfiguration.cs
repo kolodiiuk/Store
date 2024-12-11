@@ -12,11 +12,20 @@ public class CouponConfiguration : IEntityTypeConfiguration<Coupon>
         
         builder.HasKey(c => c.Id);
         
+        builder.HasMany(c => c.ServiceCoupons)
+            .WithOne(sc => sc.Coupon)
+            .HasForeignKey(sc => sc.ServiceId);
+        
+        builder.HasMany(c => c.Orders)
+            .WithOne(o => o.Coupon)
+            .HasForeignKey(o => o.CouponId);
+        
         builder.Property(c => c.Id)
             .HasColumnName("coupon_id");
         
         builder.Property(c => c.Code)
             .IsRequired()
+            .HasMaxLength(30)
             .HasColumnName("code");
         
         builder.Property(c => c.Percentage)

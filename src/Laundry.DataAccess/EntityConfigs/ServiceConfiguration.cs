@@ -12,6 +12,18 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 
         builder.HasKey(s => s.Id);
         
+        builder.HasMany(s => s.ServiceCoupons)
+            .WithOne(sc => sc.Service)
+            .HasForeignKey(sc => sc.ServiceId);
+        
+        builder.HasMany(s => s.BasketItems)
+            .WithOne(bi => bi.Service)
+            .HasForeignKey(bi => bi.ServiceId);
+        
+        builder.HasMany(s => s.OrderItems)
+            .WithOne(oi => oi.Service)
+            .HasForeignKey(oi => oi.ServiceId);
+        
         builder.Property(s => s.Id)
             .HasColumnName("service_id");
         
@@ -22,8 +34,7 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 
         builder.Property(s => s.Category)
             .HasColumnName("category")
-            .IsRequired()
-            .HasMaxLength(100);
+            .IsRequired();
 
         builder.Property(s => s.Description)
             .HasColumnName("description")
@@ -36,8 +47,7 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 
         builder.Property(s => s.UnitType)
             .HasColumnName("unit_type")
-            .IsRequired()
-            .HasMaxLength(200);
+            .IsRequired();
 
         builder.Property(s => s.IsAvailable)
             .HasColumnName("is_available")

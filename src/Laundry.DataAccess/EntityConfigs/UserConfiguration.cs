@@ -12,6 +12,18 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasKey(u => u.Id);
 
+        builder.HasMany(u => u.Orders)
+            .WithOne(o => o.User)
+            .HasForeignKey(o => o.UserId);
+        
+        builder.HasMany(c => c.Addresses)
+            .WithOne(o => o.User)
+            .HasForeignKey(o => o.UserId);
+        
+        builder.HasMany(c => c.BasketItems)
+            .WithOne(o => o.User)
+            .HasForeignKey(o => o.UserId);
+        
         builder.Property(u => u.Id)
             .HasColumnName("user_id");
 
@@ -42,8 +54,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Role)
             .HasColumnName("role")
-            .IsRequired()
-            .HasColumnType("ENUM");
+            .IsRequired();
 
         builder.Property(u => u.AddressId)
             .HasColumnName("address_id");

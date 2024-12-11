@@ -9,5 +9,7 @@ public class User : BaseEntity
     public string Password { get; set; }
     public Role Role { get; set; }
     public int AddressId { get; set; }
-    public List<Address> Addresses { get; set; }
+    public ICollection<Address> Addresses { get; set; }
+    public ICollection<Order> Orders { get; set; }
+    public ICollection<BasketItem> BasketItems { get; set; }
 }
