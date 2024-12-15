@@ -1,4 +1,4 @@
-namespace Laundry.Domain.Interfaces;
+namespace Laundry.API.Dto;
 
 public class UpdateServiceDto
 {

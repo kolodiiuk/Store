@@ -1,7 +1,8 @@
+using Laundry.API.Dto;
 using Laundry.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Laundry.Domain.Interfaces;
+namespace Laundry.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -13,15 +14,21 @@ public class BasketController : ControllerBase
         throw new NotImplementedException();
     }
 
-    // [HttpPost]
-    // public async Task<ActionResult<Basket>> CreateBasket([FromForm] CreateBasketDto basketDto)
-    // {
-    //     throw new NotImplementedException();
-    // }
+    [HttpPost]
+    public async Task<ActionResult<BasketItem>> AddToBasket([FromForm] AddToBasketDto basketDto)
+    {
+        throw new NotImplementedException();
+    }
 
     //todo: What to return actually
     [HttpPut]
-    public async Task<ActionResult<BasketItem>> UpdateBasket([FromForm] UpdateBasketDto basketDto)
+    public async Task<ActionResult<BasketItem>> UpdateBasketItem([FromForm] UpdateBasketItemDto basketItemDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult> DeleteBasketItem()
     {
         throw new NotImplementedException();
     }

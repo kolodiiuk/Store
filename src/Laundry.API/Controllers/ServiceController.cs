@@ -1,4 +1,4 @@
-using Lab12.Controllers;
+using Laundry.API.Dto;
 using Laundry.DataAccess;
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
@@ -6,7 +6,7 @@ using Laundry.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Laundry.Domain.Interfaces;
+namespace Laundry.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

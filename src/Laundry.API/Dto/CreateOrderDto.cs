@@ -1,6 +1,6 @@
 using Laundry.Domain.Enums;
 
-namespace Lab12.Controllers;
+namespace Laundry.API.Dto;
 
 public class CreateOrderDto
 {

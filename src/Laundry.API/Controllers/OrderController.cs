@@ -1,13 +1,24 @@
-using Lab12.Controllers;
+using Laundry.API.Dto;
 using Laundry.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Laundry.Domain.Interfaces;
+namespace Laundry.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class OrderController : ControllerBase
 {
+    [HttpGet("get_all_orders")]
+    public async Task<ActionResult<List<Order>>> GetAllOrders()
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpGet("get_users_orders")]
+    public async Task<ActionResult<List<Order>>> GetUsersOrders()
+    {
+        throw new NotImplementedException();
+    }
     
     [HttpGet("{id}", Name = "GetOrder")]
     public async Task<ActionResult<Order>> GetOrder(int id)
@@ -16,7 +27,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Order>> CreateOrder([FromForm] CreateOrderDto basketDto)
+    public async Task<ActionResult<Order>> PlaceOrder([FromForm] CreateOrderDto basketDto)
     {
         throw new NotImplementedException();
     }

@@ -1,5 +1,5 @@
 namespace Laundry.API.Dto;
 
-public class CreateServiceDto
+public class AddToBasketDto
 {
 }
