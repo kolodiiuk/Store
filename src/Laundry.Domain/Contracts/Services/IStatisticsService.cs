@@ -4,8 +4,8 @@ namespace Laundry.Domain.Contracts.Services;
 
 public interface IStatisticsService
 {
-    public CustomersWhichOrderedTheMostOften GetCustomersWhichOrderedTheMostOften();
-    public TheMostFrequentlyOrderedServices GetTheMostFrequentlyOrderedServices();
-    public LastYearOrdersStatistics GetLastYearOrdersStatistics();
-    public LastMonthOrdersStatistics GetLastMonthOrdersStatistics();
+     CustomersWhichOrderedTheMostOften GetCustomersWhichOrderedTheMostOften();
+     TheMostFrequentlyOrderedServices GetTheMostFrequentlyOrderedServices();
+     LastYearOrdersStatistics GetLastYearOrdersStatistics();
+     LastMonthOrdersStatistics GetLastMonthOrdersStatistics();
 }

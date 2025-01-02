@@ -28,12 +28,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         }
     }
 
-    public async Task<Result<T>> GetById(int id)
+    public async Task<Result<T>> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Result> CreateAsync(T entity)
+    public async Task<Result<int>> CreateAsync(T entity)
     {
         throw new NotImplementedException();
         await _context.AddAsync(entity);
@@ -47,10 +47,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Result> DeleteAsync(T entity)
+    public async Task<Result> DeleteAsync(int id)
     {
         throw new NotImplementedException();
-        _context.Remove(entity);
+        // _context.Remove();
         await _context.SaveChangesAsync();
     }
 }

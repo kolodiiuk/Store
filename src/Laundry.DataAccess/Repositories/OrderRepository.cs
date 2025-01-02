@@ -11,5 +11,4 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         
     }
-    // add, getByCond, 
 }

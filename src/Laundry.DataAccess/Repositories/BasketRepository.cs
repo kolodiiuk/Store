@@ -12,5 +12,4 @@ public class BasketRepository : GenericRepository<BasketItem>, IBasketRepository
     {
         
     }
-    // add, getByCond, delete
 }

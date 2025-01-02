@@ -11,5 +11,4 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     {
         
     }
-    // getby, delete, add, update
 }

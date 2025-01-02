@@ -1,3 +1,4 @@
+using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
 
@@ -5,28 +6,72 @@ namespace Laundry.Domain.Services;
 
 public class ServiceService : IServiceService
 {
-    public IQueryable<Service> GetAllAvailableServices()
+    private readonly IServiceRepository _repository;
+    
+    public ServiceService(IServiceRepository repository)
     {
-        throw new NotImplementedException();
+        _repository = repository;
+    } 
+    
+    public async Task<IQueryable<Service>> GetAllAvailableServicesAsync()
+    {
+        var availableServices = await _repository.GetAllAvailableServicesAsync();
+        if (availableServices.Failure)
+        {
+            throw new Exception("Failure getting available services");
+        }
+
+        return availableServices.Value;
     }
 
-    public IQueryable<Service> GetAllServices()
+    public async Task<IQueryable<Service>> GetAllServicesAsync()
     {
-        throw new NotImplementedException();
+        var services = await _repository.GetAllAsync();
+        if (services.Failure)
+        {
+            throw new Exception("Failure getting services");
+        }
+
+        return services.Value;
     }
 
-    public void AddService(Service service)
+    public async Task<Service> GetServiceByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var services = await _repository.GetByIdAsync(id);
+        if (services.Failure)
+        {
+            throw new Exception("Failure getting services");
+        }
+
+        return services.Value;
     }
 
-    public void UpdateService(Service service)
+    public async Task<int> AddServiceAsync(Service service)
     {
-        throw new NotImplementedException();
+        var result = await _repository.CreateAsync(service);
+        if (result.Failure)
+        {
+            throw new Exception("Failure adding a new service");
+        }
+
+        return result.Value;
     }
 
-    public void DeleteService(int id)
+    public async Task UpdateServiceAsync(Service service)
     {
-        throw new NotImplementedException();
+        var result = await _repository.UpdateAsync(service);
+        if (result.Failure)
+        {
+            throw new Exception("Failure updating a service");
+        }
+    }
+
+    public async Task DeleteServiceAsync(int id)
+    {
+        var result = await _repository.DeleteAsync(id);
+        if (result.Failure)
+        {
+            throw new Exception("Failure deleting a service");
+        }
     }
 }

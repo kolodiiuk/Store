@@ -12,5 +12,4 @@ public class FeedbackRepository : GenericRepository<Feedback>, IFeedbackReposito
     {
         
     }
-    // getByCond, add
 }

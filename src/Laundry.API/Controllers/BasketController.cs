@@ -15,7 +15,7 @@ public class BasketController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<BasketItem>> AddToBasket([FromForm] AddToBasketDto basketDto)
+    public async Task<ActionResult<BasketItem>> AddToBasket([FromForm] CreateBasketItemDto basketItemDto)
     {
         throw new NotImplementedException();
     }

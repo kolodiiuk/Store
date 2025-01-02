@@ -5,9 +5,10 @@ namespace Laundry.Domain.Contracts.Services;
 
 public interface IServiceService
 {
-    public IQueryable<Service> GetAllAvailableServices();
-    public IQueryable<Service> GetAllServices();
-    public void AddService(Service service);
-    public void UpdateService(Service service);
-    public void DeleteService(int id);
+    Task<IQueryable<Service>> GetAllAvailableServicesAsync();
+    Task<IQueryable<Service>> GetAllServicesAsync();
+    Task<Service> GetServiceByIdAsync(int id);
+    Task<int> AddServiceAsync(Service service);
+    Task UpdateServiceAsync(Service service);
+    Task DeleteServiceAsync(int id);
 }
