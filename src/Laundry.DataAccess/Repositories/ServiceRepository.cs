@@ -13,6 +13,7 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
     {
         
     }
+    
     public Task<Result<IQueryable<Service>>> GetAllAvailableServicesAsync()
     {
         throw new NotImplementedException();
