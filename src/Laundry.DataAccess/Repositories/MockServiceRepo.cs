@@ -1,8 +1,5 @@
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Laundry.Domain.Enums;
 using Laundry.Domain.Utils;
 
@@ -65,10 +62,10 @@ namespace Laundry.DataAccess.Repositories
             return Task.FromResult(Result.Success());
         }
 
-        public Task<Result<IQueryable<Service>>> GetAllAvailableServicesAsync()
+        public Result<IQueryable<Service>> GetAllAvailableServicesAsync()
         {
             var availableServices = _services.Where(s => s.IsAvailable).AsQueryable();
-            return Task.FromResult(Result<IQueryable<Service>>.Success(availableServices));
+            return Result<IQueryable<Service>>.Success(availableServices);
         }
     }
 }

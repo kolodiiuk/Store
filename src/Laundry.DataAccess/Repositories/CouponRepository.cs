@@ -1,11 +1,9 @@
-﻿using Laundry.DataAccess;
-using Laundry.DataAccess.Repositories;
-using Laundry.Domain.Contracts.Repositories;
+﻿using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
-using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
+using Microsoft.EntityFrameworkCore;
 
-namespace Laundry.Api.DataAccess.Repositories;
+namespace Laundry.DataAccess.Repositories;
 
 public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
 {
@@ -13,9 +11,21 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
     {
         
     }
-    //getByCond, add
-    public Task<Result<IQueryable<Coupon>>> GetCouponsAvailableForService(int serviceId)
+
+    public Result<IQueryable<Coupon>> GetCouponsAvailableForService(int serviceId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var coupons = _context.Coupons
+                .Where(c => c.ServiceCoupons.Any(sc => sc.ServiceId == serviceId) && c.StartDate <= DateOnly.FromDateTime(DateTime.Now) 
+                    && c.EndDate >= DateOnly.FromDateTime(DateTime.Now) && c.UsedCount > 0)
+                .AsNoTracking();
+
+            return Result.Success(coupons);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail<IQueryable<Coupon>>(e.Message);
+        }
     }
 }

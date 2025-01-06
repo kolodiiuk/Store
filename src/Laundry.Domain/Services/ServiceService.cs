@@ -13,15 +13,15 @@ public class ServiceService : IServiceService
         _repository = repository;
     } 
     
-    public async Task<IQueryable<Service>> GetAllAvailableServicesAsync()
+    public IQueryable<Service> GetAllAvailableServicesAsync()
     {
-        var availableServices = await _repository.GetAllAvailableServicesAsync();
+        var availableServices = _repository.GetAllAvailableServices();
         if (availableServices.Failure)
         {
             throw new Exception("Failure getting available services");
         }
 
-        return availableServices.Value;
+        return availableServices;
     }
 
     public async Task<IQueryable<Service>> GetAllServicesAsync()

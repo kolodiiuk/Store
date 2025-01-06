@@ -5,5 +5,5 @@ namespace Laundry.Domain.Contracts.Repositories;
 
 public interface ICouponRepository : IGenericRepository<Coupon>
 {
-    Task<Result<IQueryable<Coupon>>> GetCouponsAvailableForService(int serviceId);
+    Result<IQueryable<Coupon>> GetCouponsAvailableForService(int serviceId);
 }

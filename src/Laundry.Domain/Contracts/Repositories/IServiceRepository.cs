@@ -5,6 +5,6 @@ namespace Laundry.Domain.Contracts.Repositories;
 
 public interface IServiceRepository : IGenericRepository<Service>
 {
-    public Task<Result<IQueryable<Service>>> GetAllAvailableServicesAsync();
+    public Result<IQueryable<Service>> GetAllAvailableServices();
 
 }

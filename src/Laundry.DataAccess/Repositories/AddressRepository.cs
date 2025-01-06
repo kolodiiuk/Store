@@ -1,20 +1,29 @@
-using Laundry.DataAccess.Repositories;
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
-using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
+using Microsoft.EntityFrameworkCore;
 
-namespace Laundry.DataAccess.Repository;
+namespace Laundry.DataAccess.Repositories;
 
 public class AddressRepository : GenericRepository<Address>, IAddressRepository
 {
     public AddressRepository(LaundryDbContext context) : base(context)
     {
-        
     }
 
-    public async Task<Result<IQueryable<Address>>> GetUserAddress(int userId)
+    public Result<IQueryable<Address>> GetUserAddresses(int userId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var userAddresses = _context.Addresses
+                .Where(a => a.UserId == userId)
+                .AsNoTracking();
+
+            return Result.Success<IQueryable<Address>>(userAddresses);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail<IQueryable<Address>>(e.Message);
+        }
     }
 }

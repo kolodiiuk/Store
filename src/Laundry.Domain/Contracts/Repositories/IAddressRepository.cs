@@ -5,5 +5,5 @@ namespace Laundry.Domain.Contracts.Repositories;
 
 public interface IAddressRepository : IGenericRepository<Address>
 {
-    Task<Result<IQueryable<Address>>> GetUserAddress(int userId);
+    Result<IQueryable<Address>> GetUserAddresses(int userId);
 }

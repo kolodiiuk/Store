@@ -6,7 +6,7 @@ namespace Laundry.Domain.Contracts.Services;
 public interface IServiceService
 {
     Task<IQueryable<Service>> GetAllAvailableServicesAsync();
-    Task<IQueryable<Service>> GetAllServicesAsync();
+    IQueryable<Service> GetAllServices();
     Task<Service> GetServiceByIdAsync(int id);
     Task<int> AddServiceAsync(Service service);
     Task UpdateServiceAsync(Service service);

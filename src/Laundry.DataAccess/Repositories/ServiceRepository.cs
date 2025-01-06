@@ -1,9 +1,7 @@
-﻿using Laundry.DataAccess;
-using Laundry.DataAccess.Repositories;
-using Laundry.Domain.Contracts.Repositories;
+﻿using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
-using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
@@ -14,8 +12,20 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
         
     }
     
-    public Task<Result<IQueryable<Service>>> GetAllAvailableServicesAsync()
+    public Result<IQueryable<Service>> GetAllAvailableServicesAsync()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var availableServices = _context.Services
+                .Where(s => s.IsAvailable == true)
+                .AsNoTracking();
+
+            return Result.Success<IQueryable<Service>>(availableServices);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail<IQueryable<Service>>(e.Message);
+        }
+
     }
 }

@@ -1,11 +1,8 @@
 using AutoMapper;
 using Laundry.API.Dto;
-using Laundry.DataAccess;
-using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.API.Controllers;
 
