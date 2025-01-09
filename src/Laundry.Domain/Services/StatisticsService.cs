@@ -6,30 +6,54 @@ namespace Laundry.Domain.Services;
 
 public class StatisticsService : IStatisticsService
 {
-    private readonly IStatisticsRepository _repository;
+    private readonly IStatisticsRepository _statisticsRepository;
 
-    public StatisticsService(IStatisticsRepository repository)
+    public StatisticsService(IStatisticsRepository statisticsRepository)
     {
-        _repository = repository;
+        _statisticsRepository = statisticsRepository;
+    }
+    
+    public async Task<IEnumerable<CustomersWhichOrderedTheMostOften>> GetCustomersWhichOrderedTheMostOftenAsync()
+    {
+        var stats = await _statisticsRepository.GetCustomersWhichOrderedTheMostOftenAsync();
+        if (stats.Failure)
+        {
+            throw new Exception("Failure getting stats");
+        }
+
+        return stats.Value;
     }
 
-    public CustomersWhichOrderedTheMostOften GetCustomersWhichOrderedTheMostOften()
+    public async Task<IEnumerable<TheMostFrequentlyOrderedServices>> GetTheMostFrequentlyOrderedServicesAsync()
     {
-        throw new NotImplementedException();
+        var stats = await _statisticsRepository.GetTheMostFrequentlyOrderedServicesAsync();
+        if (stats.Failure)
+        {
+            throw new Exception("Failure getting stats");
+        }
+
+        return stats.Value;
     }
 
-    public TheMostFrequentlyOrderedServices GetTheMostFrequentlyOrderedServices()
+    public async Task<IEnumerable<LastYearOrdersStatistics>> GetLastYearOrdersStatisticsAsync()
     {
-        throw new NotImplementedException();
+        var stats = await _statisticsRepository.GetLastYearOrdersStatisticsAsync();
+        if (stats.Failure)
+        {
+            throw new Exception("Failure getting stats");
+        }
+
+        return stats.Value;
     }
 
-    public LastYearOrdersStatistics GetLastYearOrdersStatistics()
+    public async Task<IEnumerable<LastMonthOrdersStatistics>> GetLastMonthOrdersStatisticsAsync()
     {
-        throw new NotImplementedException();
-    }
+        var stats = await _statisticsRepository.GetLastMonthOrdersStatisticsAsync();
+        if (stats.Failure)
+        {
+            throw new Exception("Failure getting stats");
+        }
 
-    public LastMonthOrdersStatistics GetLastMonthOrdersStatistics()
-    {
-        throw new NotImplementedException();
+        return stats.Value;
     }
 }

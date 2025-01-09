@@ -1,3 +1,5 @@
+using AutoMapper;
+using Laundry.Domain.Contracts.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Laundry.API.Controllers;
@@ -6,27 +8,86 @@ namespace Laundry.API.Controllers;
 [Route("api/[controller]")]
 public class StatisticsController : ControllerBase
 {
-    [HttpGet("frequent_customers")]
+    private readonly IStatisticsService _statisticsService;
+
+    public StatisticsController(IStatisticsService statisticsService)
+    {
+        _statisticsService = statisticsService;
+    }
+
+    [HttpGet("frequent-customers")]
     public async Task<IActionResult> GetCustomersWhichOrderedTheMost()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var stats = await _statisticsService.GetCustomersWhichOrderedTheMostOftenAsync();
+            if (stats == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(stats);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting stats" });
+        }
     }
 
-    [HttpGet("frequent_services")]
+    [HttpGet("frequent-services")]
     public async Task<IActionResult> GetServicesOrderedTheMost()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var stats = await _statisticsService.GetCustomersWhichOrderedTheMostOftenAsync();
+            if (stats == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(stats);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting stats" });
+        }
     }
 
-    [HttpGet("last_month_stat")]
+    [HttpGet("last-month-stats")]
     public async Task<IActionResult> GetLastMonthStat()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var stats = await _statisticsService.GetLastMonthOrdersStatisticsAsync();
+            if (stats == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(stats);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting stats" });
+        }
     }
 
-    [HttpGet("last_year_stat")]
+    [HttpGet("last-year-stats")]
     public async Task<IActionResult> GetLastYearStat()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var stats = await _statisticsService.GetLastYearOrdersStatisticsAsync();
+            if (stats == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(stats);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting stats" });
+        }
     }
 }

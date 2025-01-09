@@ -1,5 +1,6 @@
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
+using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,17 +15,21 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         _context = context;
     }
 
-    public Result<IQueryable<T>> GetAllAsync()
+    public async Task<Result<IEnumerable<T>>> GetAllAsync()
     {
         try
         {
-            var queryable = _context.Set<T>().AsNoTracking();
-            
-            return Result.Success<IQueryable<T>>(queryable);
+            var list = await _context.Set<T>().AsNoTracking().ToListAsync();
+            if (list == null)
+            {
+                return Result<IEnumerable<T>>.Fail<IEnumerable<T>>($"No {typeof(T)}s");
+            }
+
+            return Result.Success((IEnumerable<T>) list);
         }
         catch (Exception ex)
         {
-            return Result.Fail<IQueryable<T>>(ex.Message);
+            return Result.Fail<IEnumerable<T>>($"Error fetching {typeof(T)}: {ex.Message}");
         }
     }
 
@@ -35,7 +40,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
             var entity = await _context.Set<T>().FindAsync(id);
             if (entity == null)
             {
-                return Result<T>.Fail<T>("Entity not found.");
+                return Result<T>.Fail<T>($"No entity {id}");
             }
             
             return Result<T>.Success<T>(entity);
@@ -81,11 +86,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         try
         {
             var entity = await _context.Set<T>().FindAsync(id);
-            if (entity == null)
-            {
-                return Result.Fail("Entity not found.");
-            }
-
             _context.Remove(entity);
             await _context.SaveChangesAsync();
             

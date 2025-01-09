@@ -1,4 +1,5 @@
 using Laundry.API.Dto;
+using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,8 +9,15 @@ namespace Laundry.API.Controllers;
 [Route("api/[controller]")]
 public class BasketController : ControllerBase
 {
-    [HttpGet("{id}", Name = "GetBasket")]
-    public async Task<ActionResult<BasketItem>> GetBasket(int id)
+    private readonly IBasketService _basketService;
+
+    public BasketController(IBasketService basketService)
+    {
+        _basketService = basketService;
+    }
+    
+    [HttpGet("{userId}", Name = "GetBasket")]
+    public async Task<ActionResult<BasketItem>> GetBasket(int userId)
     {
         throw new NotImplementedException();
     }

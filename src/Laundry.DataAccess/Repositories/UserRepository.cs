@@ -1,4 +1,6 @@
-﻿using Laundry.Domain.Entities;
+﻿using Laundry.DataAccess;
+using Laundry.DataAccess.Repositories;
+using Laundry.Domain.Entities;
 using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -11,22 +13,23 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     {
     }
 
-    public async Task<Result<User>> GetIfExistsUserAsync(string email, string password)
+    public async Task<Result<IEnumerable<Address>>> GetUserAddresses(int userId)
     {
         try
         {
-            var user = await _context.Users
-                                     .AsNoTracking()
-                                     .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
-            if (user == null)
+            var addresses = await _context.Addresses
+                .Where(a => a.UserId == userId).ToListAsync();
+            if (addresses == null)
             {
-                return Result<User>.Fail("User not found.");
+                return Result<IEnumerable<Address>>.Fail<IEnumerable<Address>>($"No addresses of user {userId}");
             }
-            return Result<User>.Success(user);
+
+            return Result<IEnumerable<Address>>.Success((IEnumerable<Address>)addresses);
         }
         catch (Exception e)
         {
-            return Result<User>.Fail(e.Message);
+            return Result<IEnumerable<Address>>.Fail<IEnumerable<Address>>(
+                $"Error fetching addresses of user {userId}: {e.Message}");
         }
     }
 }

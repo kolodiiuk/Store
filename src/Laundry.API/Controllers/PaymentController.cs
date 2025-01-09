@@ -1,4 +1,7 @@
+using Laundry.Domain.Contracts.Services;
+using Laundry.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 
 namespace Laundry.API.Controllers;
 
@@ -6,6 +9,18 @@ namespace Laundry.API.Controllers;
 [Route("api/[controller]")]
 public class PaymentController : ControllerBase
 {
+    private readonly IPaymentService _paymentService;
+
+    public PaymentController(IPaymentService paymentService)
+    {
+        _paymentService = paymentService;
+    }
+    
+    [HttpPost("")]
+    public async Task<ActionResult> CreatePaymentIntent([FromForm] CreatePaymentDto paymentDto)
+    {
+        throw new NotImplementedException();
+    }
     // [HttpPost("webhook")]
     // public async Task<ActionResult> StripeWebhook()
     // {

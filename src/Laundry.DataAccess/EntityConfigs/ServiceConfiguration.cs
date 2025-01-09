@@ -12,6 +12,9 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 
         builder.HasKey(s => s.Id);
         
+        builder.Property(p => p.RowVersion)
+            .IsRowVersion();
+        
         builder.HasMany(s => s.ServiceCoupons)
             .WithOne(sc => sc.Service)
             .HasForeignKey(sc => sc.ServiceId);

@@ -12,6 +12,9 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         
         builder.HasKey(a => a.Id);
         
+        builder.Property(p => p.RowVersion)
+            .IsRowVersion();
+        
         builder.HasMany(a => a.Orders)
             .WithOne(o => o.Address)
             .HasForeignKey(o => o.AddressId);

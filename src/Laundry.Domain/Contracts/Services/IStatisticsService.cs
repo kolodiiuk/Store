@@ -4,8 +4,8 @@ namespace Laundry.Domain.Contracts.Services;
 
 public interface IStatisticsService
 {
-     CustomersWhichOrderedTheMostOften GetCustomersWhichOrderedTheMostOften();
-     TheMostFrequentlyOrderedServices GetTheMostFrequentlyOrderedServices();
-     LastYearOrdersStatistics GetLastYearOrdersStatistics();
-     LastMonthOrdersStatistics GetLastMonthOrdersStatistics();
+     Task<IEnumerable<CustomersWhichOrderedTheMostOften>> GetCustomersWhichOrderedTheMostOftenAsync();
+     Task<IEnumerable<TheMostFrequentlyOrderedServices>> GetTheMostFrequentlyOrderedServicesAsync();
+     Task<IEnumerable<LastYearOrdersStatistics>> GetLastYearOrdersStatisticsAsync();
+     Task<IEnumerable<LastMonthOrdersStatistics>> GetLastMonthOrdersStatisticsAsync();
 }

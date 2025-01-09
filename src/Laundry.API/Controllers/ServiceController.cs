@@ -1,8 +1,11 @@
 using AutoMapper;
 using Laundry.API.Dto;
+using Laundry.DataAccess;
+using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.API.Controllers;
 
@@ -23,37 +26,55 @@ public class ServiceController : ControllerBase
     [Route("all")]
     public async Task<ActionResult<List<Service>>> GetServices()
     {
-        var query = await _serviceService.GetAllServicesAsync();
+        try
+        {
+            var query = await _serviceService.GetAllServicesAsync();
+            if (query == null)
+            {
+                return NotFound();
+            }
 
-        var services = query.ToList();
-        var servicesDtos = _mapper.Map<List<UpdateServiceDto>>(services);
-
-        return Ok(servicesDtos.ToArray()); 
+            return Ok(query.ToArray());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting all services" });
+        }
     }
 
     [HttpGet]
     [Route("available")]
     public async Task<ActionResult<List<Service>>> GetAvailableServices()
     {
-        var query = await _serviceService.GetAllAvailableServicesAsync();
+        try
+        {
+            var services = await _serviceService.GetAllAvailableServicesAsync();
 
-        var services = query.ToList();
-        var servicesDtos = _mapper.Map<List<UpdateServiceDto>>(services);
-
-        return Ok(servicesDtos.ToArray());
+            return Ok(services.ToArray());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting available services" });
+        }
     }
 
     [HttpGet("{id}", Name = "getService")]
     public async Task<ActionResult<Service>> GetService(int id)
     {
-        var service = await _serviceService.GetServiceByIdAsync(id);
-
-        if (service == null)
+        try
         {
-            return NotFound();
-        }
+            var service = await _serviceService.GetServiceByIdAsync(id);
+            if (service == null)
+            {
+                return NotFound();
+            }
 
-        return Ok(service);
+            return Ok(service);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting a service {id}" });
+        }
     }
 
     [HttpPost]
@@ -63,7 +84,6 @@ public class ServiceController : ControllerBase
         {
             return BadRequest(new ProblemDetails() { Title = "Invalid service data" });
         }
-
         var service = _mapper.Map<Service>(serviceDto);
         try
         {
@@ -85,17 +105,15 @@ public class ServiceController : ControllerBase
         {
             return BadRequest(new ProblemDetails() { Title = "Invalid service data" });
         }
-
         var service = await _serviceService.GetServiceByIdAsync(serviceDto.Id);
         if (service == null)
         {
             return NotFound();
         }
-
         _mapper.Map(serviceDto, service);
         try
         {
-            _serviceService.UpdateServiceAsync(service);
+            await _serviceService.UpdateServiceAsync(service);
             return Ok(service);
         }
         catch (Exception e)
@@ -110,12 +128,11 @@ public class ServiceController : ControllerBase
         try
         {
             await _serviceService.DeleteServiceAsync(id);
+            return Ok();
         }
         catch (Exception e)
         {
             return BadRequest(new ProblemDetails() { Title = $"Problem deleting a service {id}" });
         }
-        
-        return Ok();
     }
 }

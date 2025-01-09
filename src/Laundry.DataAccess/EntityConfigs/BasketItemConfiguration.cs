@@ -13,6 +13,9 @@ public class BasketItemConfiguration : IEntityTypeConfiguration<BasketItem>
         
         builder.HasKey(bi => bi.Id);
 
+        builder.Property(p => p.RowVersion)
+            .IsRowVersion();
+        
         builder.HasOne(bi => bi.User)
             .WithMany(u => u.BasketItems)
             .HasForeignKey(bi => bi.UserId)

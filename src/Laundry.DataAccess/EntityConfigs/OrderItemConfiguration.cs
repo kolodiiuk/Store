@@ -12,6 +12,9 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         
         builder.HasKey(oi => oi.Id);
 
+        builder.Property(p => p.RowVersion)
+            .IsRowVersion();
+        
         builder.HasOne(oi => oi.Service)
             .WithMany(s => s.OrderItems)
             .HasForeignKey(oi => oi.ServiceId)

@@ -5,7 +5,7 @@ namespace Laundry.Domain.Contracts.Repositories;
 
 public interface IGenericRepository<T> where T : BaseEntity
 {
-        Result<IQueryable<T>> GetAll();
+        Task<Result<IEnumerable<T>>> GetAllAsync();
         Task<Result<T>> GetByIdAsync(int id);
         Task<Result<int>> CreateAsync(T entity);
         Task<Result> UpdateAsync(T entity);

@@ -1,4 +1,5 @@
 using Laundry.API.Dto;
+using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,14 +9,21 @@ namespace Laundry.API.Controllers;
 [Route("api/[controller]")]
 public class OrderController : ControllerBase
 {
-    [HttpGet("get_all_orders")]
+    private readonly IOrderService _orderService;
+
+    public OrderController(IOrderService orderService)
+    {
+        _orderService = orderService;
+    }
+    
+    [HttpGet("all")]
     public async Task<ActionResult<List<Order>>> GetAllOrders()
     {
         throw new NotImplementedException();
     }
 
-    [HttpGet("get_users_orders")]
-    public async Task<ActionResult<List<Order>>> GetUsersOrders()
+    [HttpGet("user/{userId}")]
+    public async Task<ActionResult<List<Order>>> GetUsersOrders(int userId)
     {
         throw new NotImplementedException();
     }
@@ -37,10 +45,16 @@ public class OrderController : ControllerBase
     {
         throw new NotImplementedException();
     }
-    
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteOrder(int id)
+
+    [HttpPut("status/{orderId}")]
+    public async Task<ActionResult> UpdateOrderStatus(int orderId)
     {
         throw new NotImplementedException();
     }
+    
+    // [HttpDelete("{id}")]
+    // public async Task<ActionResult> DeleteOrder(int id)
+    // {
+    //     throw new NotImplementedException();
+    // }
 }

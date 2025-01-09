@@ -41,6 +41,25 @@ public class ReportsService : IReportsService
 
     public void SendChequeWithEmail(int orderId)
     {
-        
+        // var cheque = _orderService.
+        // var memoryStream = new MemoryStream();
+        // var writer = new PdfWriter(memoryStream);
+        // var pdf = new PdfDocument(writer);
+        // var document = new Document(pdf);
+        //
+        // document.Add(new Paragraph("Чек"));
+        //
+        // foreach (var service in services)
+        // {
+        //     document.Add(new Paragraph($"{service.Name} - {service.PricePerUnit:C} за {service.UnitType}"));
+        // }
+        //
+        // document.Add(new Paragraph($"{DateTime.Now.ToLongDateString()} " +
+        //                            $"{DateTime.Now.ToLongTimeString()}"));
+        //
+        // document.Close();
+        // memoryStream.Position = 0;
+        //
+        // return memoryStream;
     }
 }

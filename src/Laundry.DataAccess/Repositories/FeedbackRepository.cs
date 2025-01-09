@@ -1,5 +1,9 @@
-﻿using Laundry.Domain.Contracts.Repositories;
+﻿using System.Collections;
+using Laundry.DataAccess;
+using Laundry.DataAccess.Repositories;
+using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
+using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,19 +15,23 @@ public class FeedbackRepository : GenericRepository<Feedback>, IFeedbackReposito
     {
     }
 
-    public Result<IQueryable<Feedback>> GetFeedbacksForOrder(int orderId)
+    public async Task<Result<IEnumerable<Feedback>>> GetFeedbacksForOrder(int orderId)
     {
         try
         {
-            var orderFeedbacks = _context.Feedbacks
-                .Where(f => f.OrderId == orderId)
-                .AsNoTracking();
+            var feedbacks = await _context.Feedbacks
+                .Where(f => f.OrderId == orderId).ToListAsync();
+            if (feedbacks == null)
+            {
+                return Result<IEnumerable<Feedback>>.Fail<IEnumerable<Feedback>>($"No feedbacks");
+            }
 
-            return Result.Success<IQueryable<Feedback>>(orderFeedbacks);
+            return Result<IEnumerable<Feedback>>.Success((IEnumerable<Feedback>)feedbacks);
         }
         catch (Exception e)
         {
-            return Result.Fail<IQueryable<Feedback>>(e.Message);
+            return Result<IEnumerable<Feedback>>.Fail<IEnumerable<Feedback>>(
+                $"Error fetching feedbacks for order {orderId}: {e.Message}");
         }
     }
 }

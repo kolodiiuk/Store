@@ -1,5 +1,8 @@
-﻿using Laundry.Domain.Contracts.Repositories;
+﻿using Laundry.DataAccess;
+using Laundry.DataAccess.Repositories;
+using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
+using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,23 +12,25 @@ public class ServiceRepository : GenericRepository<Service>, IServiceRepository
 {
     public ServiceRepository(LaundryDbContext context) : base(context)
     {
-        
     }
-    
-    public Result<IQueryable<Service>> GetAllAvailableServicesAsync()
+
+    public async Task<Result<IEnumerable<Service>>> GetAllAvailableServicesAsync()
     {
         try
         {
-            var availableServices = _context.Services
-                .Where(s => s.IsAvailable == true)
-                .AsNoTracking();
+            var services = await _context.Services
+                .Where(s => s.IsAvailable == true).ToListAsync();
+            if (services == null)
+            {
+                return Result<IEnumerable<Service>>.Fail<IEnumerable<Service>>($"No services");
+            }
 
-            return Result.Success<IQueryable<Service>>(availableServices);
+            return Result<IEnumerable<Service>>.Success<IEnumerable<Service>>((IEnumerable<Service>)services);
         }
         catch (Exception e)
         {
-            return Result.Fail<IQueryable<Service>>(e.Message);
+            return Result<IEnumerable<Service>>.Fail<IEnumerable<Service>>(
+                $"Error fetching available services: {e.Message}");
         }
-
     }
 }

@@ -1,8 +1,7 @@
 namespace Laundry.Domain.Entities;
 
-public class ServiceCoupon
+public class ServiceCoupon : BaseEntity
 {
-    public int Id { get; set; }
     public int ServiceId { get; set; }
     public int CouponId { get; set; }
 

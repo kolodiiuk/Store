@@ -12,6 +12,9 @@ public class FeedbackConfiguration : IEntityTypeConfiguration<Feedback>
         
         builder.HasKey(f => f.Id);
         
+        builder.Property(p => p.RowVersion)
+            .IsRowVersion();
+        
         builder.HasOne(f => f.Order) 
             .WithMany(o => o.Feedbacks) 
             .HasForeignKey(f => f.OrderId) 

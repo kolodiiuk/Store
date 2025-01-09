@@ -1,5 +1,9 @@
-﻿using Laundry.Domain.Contracts.Repositories;
+﻿using System.ComponentModel.DataAnnotations;
+using Laundry.DataAccess;
+using Laundry.DataAccess.Repositories;
+using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
+using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,23 +13,26 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
 {
     public CouponRepository(LaundryDbContext context) : base(context)
     {
-        
     }
 
-    public Result<IQueryable<Coupon>> GetCouponsAvailableForService(int serviceId)
+    public async Task<Result<Coupon>> GetCouponByCode(string couponCode)
     {
         try
         {
-            var coupons = _context.Coupons
-                .Where(c => c.ServiceCoupons.Any(sc => sc.ServiceId == serviceId) && c.StartDate <= DateOnly.FromDateTime(DateTime.Now) 
-                    && c.EndDate >= DateOnly.FromDateTime(DateTime.Now) && c.UsedCount > 0)
-                .AsNoTracking();
+            var coupon = _context.Coupons.FirstOrDefault(c => c.Code == couponCode);
+            if (coupon == null)
+            {
+                return Result<Coupon>.Fail<Coupon>($"No such coupon {couponCode}");
+            }
 
-            return Result.Success(coupons);
+            return Result<Coupon>.Success<Coupon>(coupon);
         }
         catch (Exception e)
         {
-            return Result.Fail<IQueryable<Coupon>>(e.Message);
+            return Result<Coupon>.Fail<Coupon>(
+                $"Error decrementing used count/deleting a coupon {couponCode}: {e.Message}");
         }
     }
 }
+
+

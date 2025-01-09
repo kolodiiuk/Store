@@ -1,5 +1,8 @@
-﻿using Laundry.Domain.Contracts.Repositories;
+﻿using Laundry.DataAccess;
+using Laundry.DataAccess.Repositories;
+using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
+using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,22 +12,25 @@ public class BasketRepository : GenericRepository<BasketItem>, IBasketRepository
 {
     public BasketRepository(LaundryDbContext context) : base(context)
     {
-        
     }
 
-    public Result<IQueryable<BasketItem>> GetUserBasket(int userId)
+    public async Task<Result<IEnumerable<BasketItem>>> GetUserBasket(int userId)
     {
         try
         {
-            var userBasket = _context.BasketItems
-                .Where(bi => bi.UserId == userId)
-                .AsNoTracking();
+            var basket = await _context.BasketItems
+                .Where(bi => bi.UserId == userId).ToListAsync();
+            if (basket == null)
+            {
+                return Result<IEnumerable<BasketItem>>.Fail<IEnumerable<BasketItem>>($"No basketitems");
+            }
 
-            return Result.Success<IQueryable<BasketItem>>(userBasket);
+            return Result<IEnumerable<BasketItem>>.Success((IEnumerable<BasketItem>)basket);
         }
         catch (Exception e)
         {
-            return Result.Fail<IQueryable<BasketItem>>(e.Message);
+            return Result<IEnumerable<BasketItem>>.Fail<IEnumerable<BasketItem>>(
+                $"Error fetching basket of user {userId}: {e.Message}");
         }
     }
 }

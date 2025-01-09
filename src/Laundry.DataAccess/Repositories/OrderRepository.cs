@@ -1,4 +1,6 @@
-﻿using Laundry.Domain.Contracts.Repositories;
+﻿using Laundry.DataAccess;
+using Laundry.DataAccess.Repositories;
+using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -9,24 +11,109 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
 {
     public OrderRepository(LaundryDbContext context) : base(context)
     {
-        
     }
 
-    public async Task<Result<IQueryable<Order>>> GetOrdersForUser(int userId)
+    public async Task<Result<IEnumerable<Order>>> GetOrdersOfUser(int userId)
     {
         try
         {
-            var userAddresses = _context.Addresses
-                .Where(a => a.UserId == userId)
-                .AsNoTracking();
-
-            return Result.Success(userAddresses);
+            var orders = await _context.Orders
+                .Where(o => o.Id == userId)
+                .Include(o => o.OrderItems)
+                .Include(o => o.Feedbacks)
+                .Include(o => o.User)
+                .Include(o => o.Address)
+                .Include(o => o.Coupon)
+                .FirstOrDefaultAsync();
+            if (orders == null)
+            {
+                return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"No orders");
+            }
+            
+            return Result<IEnumerable<Order>>.Success<IEnumerable<Order>>((IEnumerable<Order>) orders);
         }
         catch (Exception e)
         {
-            return Result.Fail<IQueryable<Address>>(e.Message);
+            return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"Error fetching order {userId}");
         }
+    }
 
+    public async Task<Result<Order>> GetOrder(int orderId)
+    {
+        try
+        {
+            var order = await _context.Orders
+                .Where(o => o.Id == orderId)
+                .Include(o => o.OrderItems)
+                .Include(o => o.Feedbacks)
+                .Include(o => o.User)
+                .Include(o => o.Address)
+                .Include(o => o.Coupon)
+                .FirstOrDefaultAsync();
+            if (order == null)
+            {
+                return Result<Order>.Fail<Order>($"No order {orderId}");
+            }
+            
+            return Result<Order>.Success<Order>(order);
+        }
+        catch (Exception e)
+        {
+            return Result<Order>.Fail<Order>($"Error fetching order {orderId}");
+        }
+    }
+
+    public async Task<Result<IEnumerable<Order>>> GetAllOrders()
+    {
+        try
+        {
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .Include(o => o.Feedbacks)
+                .Include(o => o.User)
+                .Include(o => o.Address)
+                .Include(o => o.Coupon)
+                .AsNoTracking()
+                .ToListAsync();
+            if (orders == null)
+            {
+                return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"No orders");
+            }
+            return Result<IEnumerable<Order>>.Success((IEnumerable<Order>) orders);
+        }
+        catch (Exception ex)
+        {
+            return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"Error fetching orders: {ex.Message}");
+        }
+    }
+
+    public async Task<Result<int>> CreateOrderAsync(Order order)
+    {
+        try
+        {
+            var entityEntry = await _context.AddAsync(order);
+            await _context.SaveChangesAsync();
+            
+            return Result<int>.Success(entityEntry.Entity.Id);
+        }
+        catch (Exception e)
+        {
+            return Result<int>.Fail<int>(e.Message);
+        }
+    }
+
+    public async Task<Result> UpdateOrderAsync(Order order)
+    {
+        try
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+            
+            return Result.Success();
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(e.Message);
+        }
     }
 }
-// if count isn't 0, if service is correct, if isn't expired

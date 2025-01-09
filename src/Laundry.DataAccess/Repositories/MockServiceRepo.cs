@@ -1,5 +1,8 @@
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Laundry.Domain.Enums;
 using Laundry.Domain.Utils;
 
@@ -17,15 +20,15 @@ namespace Laundry.DataAccess.Repositories
             new Service { Id = 6, Name = "Folding", PricePerUnit = 1.0m, UnitType = UnitType.Pcs, IsAvailable = true  },
         };
 
-        public Task<IQueryable<Service>> GetAllServicesAsync()
+        public Task<IEnumerable<Service>> GetAllServicesAsync()
         {
-            return Task.FromResult(_services.AsQueryable());
+            return Task.FromResult((IEnumerable<Service>) _services);
         }
 
-        public Task<Result<IQueryable<Service>>> GetAllAsync()
+        public Task<Result<IEnumerable<Service>>> GetAllAsync()
         {
-            var queryableServices = _services.AsQueryable();
-            return Task.FromResult(Result<IQueryable<Service>>.Success(queryableServices));
+            var queryableServices = _services;
+            return Task.FromResult(Result<IEnumerable<Service>>.Success((IEnumerable<Service>) queryableServices));
         }
 
         public Task<Result<Service>> GetByIdAsync(int id)
@@ -62,10 +65,10 @@ namespace Laundry.DataAccess.Repositories
             return Task.FromResult(Result.Success());
         }
 
-        public Result<IQueryable<Service>> GetAllAvailableServicesAsync()
+        public Task<Result<IEnumerable<Service>>> GetAllAvailableServicesAsync()
         {
-            var availableServices = _services.Where(s => s.IsAvailable).AsQueryable();
-            return Result<IQueryable<Service>>.Success(availableServices);
+            var availableServices = _services.Where(s => s.IsAvailable);
+            return Task.FromResult(Result<IEnumerable<Service>>.Success(availableServices));
         }
     }
 }
