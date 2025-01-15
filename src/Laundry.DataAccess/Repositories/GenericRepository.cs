@@ -1,6 +1,5 @@
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
-using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,10 +19,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         try
         {
             var list = await _context.Set<T>().AsNoTracking().ToListAsync();
-            if (list == null)
-            {
-                return Result<IEnumerable<T>>.Fail<IEnumerable<T>>($"No {typeof(T)}s");
-            }
 
             return Result.Success((IEnumerable<T>) list);
         }
@@ -70,10 +65,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         try
         {
-            _context.Set<T>().Update(entity);
+            _context.Set<T>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            
+
             return Result.Success();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Result.Fail(
+                $"Entity of type {typeof(T).Name} with ID {entity.Id} does not exist or has been modified by another user.");
         }
         catch (Exception e)
         {
@@ -86,9 +87,15 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         try
         {
             var entity = await _context.Set<T>().FindAsync(id);
+
+            if (entity == null)
+            {
+                return Result.Fail($"Entity of type {typeof(T).Name} with ID {id} does not exist.");
+            }
+
             _context.Remove(entity);
             await _context.SaveChangesAsync();
-            
+
             return Result.Success();
         }
         catch (Exception e)

@@ -1,9 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Laundry.DataAccess;
-using Laundry.DataAccess.Repositories;
-using Laundry.Domain.Contracts.Repositories;
+﻿using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
-using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +11,11 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
     {
     }
 
-    public async Task<Result<Coupon>> GetCouponByCode(string couponCode)
+    public async Task<Result<Coupon>> GetCouponByCodeAsync(string couponCode)
     {
         try
         {
-            var coupon = _context.Coupons.FirstOrDefault(c => c.Code == couponCode);
+            var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.Code == couponCode);
             if (coupon == null)
             {
                 return Result<Coupon>.Fail<Coupon>($"No such coupon {couponCode}");
@@ -30,9 +26,7 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
         catch (Exception e)
         {
             return Result<Coupon>.Fail<Coupon>(
-                $"Error decrementing used count/deleting a coupon {couponCode}: {e.Message}");
+                $"Data access error: {e.Message}");
         }
     }
 }
-
-

@@ -12,9 +12,6 @@ public class BasketItemConfiguration : IEntityTypeConfiguration<BasketItem>
         builder.ToTable("basket_item");
         
         builder.HasKey(bi => bi.Id);
-
-        builder.Property(p => p.RowVersion)
-            .IsRowVersion();
         
         builder.HasOne(bi => bi.User)
             .WithMany(u => u.BasketItems)

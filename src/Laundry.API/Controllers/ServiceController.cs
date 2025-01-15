@@ -1,11 +1,8 @@
 using AutoMapper;
 using Laundry.API.Dto;
-using Laundry.DataAccess;
-using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.API.Controllers;
 
@@ -34,7 +31,7 @@ public class ServiceController : ControllerBase
                 return NotFound();
             }
 
-            return Ok(query.ToArray());
+            return Ok(query);
         }
         catch (Exception e)
         {
@@ -58,7 +55,7 @@ public class ServiceController : ControllerBase
         }
     }
 
-    [HttpGet("{id}", Name = "getService")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Service>> GetService(int id)
     {
         try

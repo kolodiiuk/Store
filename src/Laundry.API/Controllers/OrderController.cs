@@ -1,3 +1,4 @@
+using AutoMapper;
 using Laundry.API.Dto;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
@@ -10,10 +11,13 @@ namespace Laundry.API.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
-
-    public OrderController(IOrderService orderService)
+    private readonly IMapper _mapper;
+    
+    public OrderController(IOrderService orderService,
+        IMapper mapper)
     {
         _orderService = orderService;
+        _mapper = mapper;
     }
     
     [HttpGet("all")]
@@ -28,20 +32,20 @@ public class OrderController : ControllerBase
         throw new NotImplementedException();
     }
     
-    [HttpGet("{id}", Name = "GetOrder")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Order>> GetOrder(int id)
     {
         throw new NotImplementedException();
     }
 
     [HttpPost]
-    public async Task<ActionResult<Order>> PlaceOrder([FromForm] CreateOrderDto basketDto)
+    public async Task<ActionResult<Order>> PlaceOrder([FromForm] CreateOrderDto orderDto)
     {
         throw new NotImplementedException();
     }
 
     [HttpPut]
-    public async Task<ActionResult<Order>> UpdateOrder([FromForm] UpdateOrderDto basketDto)
+    public async Task<ActionResult<Order>> UpdateOrder([FromForm] OrderDtos orderDto)
     {
         throw new NotImplementedException();
     }
@@ -51,10 +55,4 @@ public class OrderController : ControllerBase
     {
         throw new NotImplementedException();
     }
-    
-    // [HttpDelete("{id}")]
-    // public async Task<ActionResult> DeleteOrder(int id)
-    // {
-    //     throw new NotImplementedException();
-    // }
 }

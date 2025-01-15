@@ -5,5 +5,5 @@ namespace Laundry.Domain.Contracts.Repositories;
 
 public interface IBasketRepository : IGenericRepository<BasketItem>
 {
-    Task<Result<IEnumerable<BasketItem>>> GetUserBasket(int userId);
+    Task<Result<IEnumerable<BasketItem>>> GetUserBasketAsync(int userId);
 }

@@ -8,5 +8,3 @@ public class CustomersWhichOrderedTheMostOften
     public double? AvgRating { get; set; }
     public decimal SumOrders { get; set; }
 }
-
-// "SELECT u.first_name"

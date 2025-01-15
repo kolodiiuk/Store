@@ -1,7 +1,11 @@
+using Laundry.Domain.Entities;
+
 namespace Laundry.Domain.Contracts.Services;
 
 public interface IAuthService
 {
-    void Register(string email, string password);
-    void Login(string email, string password);
+    Task RegisterAsync(User user);
+    Task LoginAsync(string email, string password);
+    Task<IEnumerable<User>> GetUsersAsync();
+    Task<User> GetUserAsync(int userId);
 }

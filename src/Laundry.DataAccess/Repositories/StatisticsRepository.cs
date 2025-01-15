@@ -1,6 +1,4 @@
-using System.Collections;
 using Laundry.Domain.Contracts.Repositories;
-using Laundry.Domain.Entities;
 using Laundry.Domain.Statistics;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;

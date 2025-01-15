@@ -15,5 +15,6 @@ public static class ContainerConfigExtensions
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IBasketService, BasketService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ICouponService, CouponService>();
     }
 }

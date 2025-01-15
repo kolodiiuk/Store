@@ -2,6 +2,22 @@ using Laundry.Domain.Enums;
 
 namespace Laundry.API.Dto;
 
+public class OrderDtos
+{
+}
+
+public class UpdateOrderStatusDto
+{
+}
+
+public class UpdatePaymentMethodDto
+{
+}
+
+public class CreatePaymentDto
+{
+}
+
 public class CreateOrderDto
 {
     public OrderStatus Status { get; set; }
@@ -13,4 +29,9 @@ public class CreateOrderDto
     public DateTime CollectedDate { get; set; }
     public DateTime DeliveredDate { get; set; }
     public int UserId { get; set; }
+}
+
+public class CreateFeedbackDto
+{
+    
 }

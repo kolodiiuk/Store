@@ -4,8 +4,9 @@ namespace Laundry.Domain.Contracts.Services;
 
 public interface IBasketService
 {
-    void AddItemToBasket(BasketItem basketItem);
-    void DeleteItemFromBasket(int basketItemId);
-    List<BasketItem> GetBasket(int userId);
-    decimal CalculateTotal(int userId);
+    Task<int> AddItemToBasketAsync(BasketItem basketItem);
+    Task UpdateQuantity(int basketItemId, int newValue);
+    Task DeleteItemFromBasket(int basketItemId);
+    Task<IEnumerable<BasketItem>> GetBasket(int userId);
+    Task<decimal> CalculateTotal(int userId);
 }

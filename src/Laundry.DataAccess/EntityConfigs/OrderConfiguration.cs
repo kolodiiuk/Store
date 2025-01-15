@@ -12,9 +12,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         
         builder.HasKey(o => o.Id);
         
-        builder.Property(p => p.RowVersion)
-            .IsRowVersion();
-        
         builder.HasMany(o => o.OrderItems)
             .WithOne(oi => oi.Order)
             .HasForeignKey(oi => oi.OrderId);

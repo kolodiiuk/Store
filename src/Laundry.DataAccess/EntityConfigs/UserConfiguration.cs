@@ -11,10 +11,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ToTable("user");
 
         builder.HasKey(u => u.Id);
-
-        builder.Property(p => p.RowVersion)
-            .IsRowVersion();
-        
+ 
         builder.HasMany(u => u.Orders)
             .WithOne(o => o.User)
             .HasForeignKey(o => o.UserId);
@@ -58,8 +55,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Role)
             .HasColumnName("role")
             .IsRequired();
-
-        builder.Property(u => u.AddressId)
-            .HasColumnName("address_id");
     }
 }

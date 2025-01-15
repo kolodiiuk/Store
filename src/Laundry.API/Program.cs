@@ -1,11 +1,12 @@
 using FluentValidation;
 using Laundry.API.Validators;
+using FluentValidation.AspNetCore;
+using Laundry.API;
+using Laundry.DataAccess;
 using Laundry.DataAccess.Repositories;
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Services;
-using FluentValidation.AspNetCore;
-using Laundry.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddControllers();
+// builder.Services.RegisterRepositories();
 builder.Services.AddScoped<IServiceRepository, MockServiceRepo>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddFluentValidationAutoValidation();
@@ -29,11 +31,7 @@ builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateServiceDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateServiceDtoValidator>();
-// builder.Services.AddValidatorsFromAssemblyContaining<UpdateServiceDtoValidator>();
-// builder.Services.AddValidatorsFromAssemblyContaining<UpdateServiceDtoValidator>();
-// builder.Services.AddValidatorsFromAssemblyContaining<UpdateServiceDtoValidator>();
-// builder.Services.AddValidatorsFromAssemblyContaining<UpdateServiceDtoValidator>();
-// builder.Services.AddValidatorsFromAssemblyContaining<UpdateServiceDtoValidator>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

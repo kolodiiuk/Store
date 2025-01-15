@@ -1,8 +1,5 @@
-﻿using Laundry.DataAccess;
-using Laundry.DataAccess.Repositories;
-using Laundry.Domain.Contracts.Repositories;
+﻿using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Entities;
-using Laundry.Domain.Interfaces;
 using Laundry.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +11,7 @@ public class BasketRepository : GenericRepository<BasketItem>, IBasketRepository
     {
     }
 
-    public async Task<Result<IEnumerable<BasketItem>>> GetUserBasket(int userId)
+    public async Task<Result<IEnumerable<BasketItem>>> GetUserBasketAsync(int userId)
     {
         try
         {
@@ -22,7 +19,7 @@ public class BasketRepository : GenericRepository<BasketItem>, IBasketRepository
                 .Where(bi => bi.UserId == userId).ToListAsync();
             if (basket == null)
             {
-                return Result<IEnumerable<BasketItem>>.Fail<IEnumerable<BasketItem>>($"No basketitems");
+                return Result<IEnumerable<BasketItem>>.Fail<IEnumerable<BasketItem>>($"No basket items");
             }
 
             return Result<IEnumerable<BasketItem>>.Success((IEnumerable<BasketItem>)basket);

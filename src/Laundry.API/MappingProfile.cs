@@ -11,6 +11,11 @@ public class MappingProfile : Profile
         CreateMap<Service, CreateServiceDto>().ReverseMap();
         CreateMap<Service, UpdateServiceDto>().ReverseMap();
         
-        CreateMap<User, CreateUserDto>();
+        // CreateMap<User, RegisterDto>().ReverseMap();
+        // CreateMap<User, LoginDto>().ReverseMap();
+        CreateMap<Coupon, CreateCouponDto>().ReverseMap();
+        CreateMap<Coupon, UpdateCouponDto>().ReverseMap();
+        CreateMap<Order, CreateOrderDto>().ReverseMap();
+        CreateMap<BasketItem, CreateBasketItemDto>().ReverseMap();
     }
 }

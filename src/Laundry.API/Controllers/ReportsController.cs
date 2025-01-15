@@ -14,16 +14,19 @@ public class ReportsController : ControllerBase
         _reportsService = reportsService;
     }
     
-    [HttpGet("check")]
-    public async Task<IActionResult> GetCheque(int orderId)
+    [HttpGet("cheque")]
+    public async Task<IActionResult> GetCheque(int orderId, string email)
     {
-        throw new NotImplementedException();
+        await _reportsService.SendChequeWithEmail(orderId, email);
+
+        return Ok();
     }
 
     [HttpGet("price_list")]
     public async Task<IActionResult> GetPriceList()
     {
-        throw new NotImplementedException();
-        // File method of ControllerBase
+        var priceList = await _reportsService.GetPriceListAsync();
+
+        return File(priceList, "application/pdf", "PriceList.pdf");
     }
 }

@@ -11,9 +11,6 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         builder.ToTable("order_item");
         
         builder.HasKey(oi => oi.Id);
-
-        builder.Property(p => p.RowVersion)
-            .IsRowVersion();
         
         builder.HasOne(oi => oi.Service)
             .WithMany(s => s.OrderItems)

@@ -1,6 +1,7 @@
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
+using Laundry.Domain.Enums;
 
 namespace Laundry.Domain.Services;
 
@@ -14,22 +15,32 @@ public class OrderService : IOrderService
         _orderRepository = orderRepository;
     }
     
-    public void PlaceOrder()
+    public Task PlaceOrderAsync()
     {
         throw new NotImplementedException();
     }
 
-    public List<Order> GetOrders(int userId)
+    public Task<IEnumerable<Order>> GetOrdersAsync(int userId)
+    {
+         throw new NotImplementedException();
+    }
+
+    public Task<Order> GetOrderAsync(int orderId)
     {
         throw new NotImplementedException();
     }
 
-    public Order GetOrder(int orderId)
+    public Task UpdateOrderStatusAsync(int orderId, OrderStatus status)
     {
         throw new NotImplementedException();
     }
-    
-// public async Task<Result> MarkCouponAsUsed(int couponId)
+
+    public Task UpdatePaymentStatusAsync(int orderId, PaymentStatus status)
+    {
+        throw new NotImplementedException();
+    }
+
+    // public async Task<Result> MarkCouponAsUsed(int couponId)
     // {
     //     try
     //     {
