@@ -5,23 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
-public class StatisticsRepository : IStatisticsRepository
+public class StatisticsRepository(LaundryDbContext context, IDateTimeProvider dateTimeProvider)
+    : IStatisticsRepository
 {
-    private readonly LaundryDbContext _context;
-    private readonly IDateTimeProvider _dateTime;
-
-    public StatisticsRepository(LaundryDbContext context, IDateTimeProvider dateTimeProvider)
-    {
-        _context = context;
-        _dateTime = dateTimeProvider;
-    }
-
     public async Task<Result<IEnumerable<CustomersWhichOrderedTheMostOften>>>
         GetCustomersWhichOrderedTheMostOftenAsync()
     {
         try
         {
-            var statistics = await _context.Set<CustomersWhichOrderedTheMostOften>()
+            var statistics = await context.Set<CustomersWhichOrderedTheMostOften>()
                 .FromSqlRaw(@"SELECT u.first_name AS FirstName,
                                   u.last_name AS LastName, 
                                   COUNT(o.order_id) AS OrderCount,
@@ -56,7 +48,7 @@ public class StatisticsRepository : IStatisticsRepository
     {
         try
         {
-            var statistics = await _context.Set<TheMostFrequentlyOrderedServices>()
+            var statistics = await context.Set<TheMostFrequentlyOrderedServices>()
                 .FromSqlRaw(@$"SELECT s.service_name ServiceName, 
                                       s.category ServiceCategory, 
                                       s.price_per_unit ServicePrice, 
@@ -94,8 +86,8 @@ public class StatisticsRepository : IStatisticsRepository
     {
         try
         {
-            var lastYear = _dateTime.Now.AddYears(-1);
-            var statistics = await _context.Orders
+            var lastYear = dateTimeProvider.Now.AddYears(-1);
+            var statistics = await context.Orders
                 .Where(o => o.CreatedAt >= lastYear)
                 .GroupBy(o => o.CreatedAt.Month)
                 .Select(g => new LastYearOrdersStatistics
@@ -128,8 +120,8 @@ public class StatisticsRepository : IStatisticsRepository
     {
         try
         {
-            var lastMonth = _dateTime.Now.AddMonths(-1);
-            var statistics = await _context.Orders
+            var lastMonth = dateTimeProvider.Now.AddMonths(-1);
+            var statistics = await context.Orders
                 .Where(o => o.CreatedAt >= lastMonth)
                 .GroupBy(o => o.CreatedAt.Day)
                 .Select(g => new LastMonthOrdersStatistics

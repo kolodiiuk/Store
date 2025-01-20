@@ -5,14 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+public class GenericRepository<T>(LaundryDbContext context) : IGenericRepository<T>
+    where T : BaseEntity
 {
-    protected readonly LaundryDbContext _context;
-
-    public GenericRepository(LaundryDbContext context)
-    {
-        _context = context;
-    }
+    protected readonly LaundryDbContext _context = context;
 
     public async Task<Result<IEnumerable<T>>> GetAllAsync()
     {

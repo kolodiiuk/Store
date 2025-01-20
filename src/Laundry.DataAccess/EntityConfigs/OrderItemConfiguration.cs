@@ -15,7 +15,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         builder.HasOne(oi => oi.Service)
             .WithMany(s => s.OrderItems)
             .HasForeignKey(oi => oi.ServiceId)
-            .IsRequired()
+            .IsRequired(false) 
             .OnDelete(DeleteBehavior.SetNull);
         
         builder.HasOne(oi => oi.Order)

@@ -5,13 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
-public class AddressRepository : GenericRepository<Address>, IAddressRepository
+public class AddressRepository(LaundryDbContext context) : GenericRepository<Address>(context), IAddressRepository
 {
-    public AddressRepository(LaundryDbContext context) : base(context)
-    {
-    }
-
-    public Result<IQueryable<Address>> GetUserAddresses(int userId)
+    public Result<IEnumerable<Address>> GetUserAddresses(int userId)
     {
         try
         {
@@ -19,11 +15,11 @@ public class AddressRepository : GenericRepository<Address>, IAddressRepository
                 .Where(a => a.UserId == userId)
                 .AsNoTracking();
 
-            return Result.Success<IQueryable<Address>>(userAddresses);
+            return Result.Success<IEnumerable<Address>>((IEnumerable<Address>) userAddresses);
         }
         catch (Exception e)
         {
-            return Result.Fail<IQueryable<Address>>(e.Message);
+            return Result.Fail<IEnumerable<Address>>(e.Message);
         }
     }
 }

@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
-public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
+public class CouponRepository(LaundryDbContext context) : GenericRepository<Coupon>(context), ICouponRepository
 {
-    public CouponRepository(LaundryDbContext context) : base(context)
-    {
-    }
-
     public async Task<Result<Coupon>> GetCouponByCodeAsync(string couponCode)
     {
         try

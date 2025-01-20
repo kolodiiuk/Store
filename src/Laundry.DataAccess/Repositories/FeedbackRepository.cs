@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
-public class FeedbackRepository : GenericRepository<Feedback>, IFeedbackRepository
+public class FeedbackRepository(LaundryDbContext context) : GenericRepository<Feedback>(context), IFeedbackRepository
 {
-    public FeedbackRepository(LaundryDbContext context) : base(context)
-    {
-    }
-
     public async Task<Result<IEnumerable<Feedback>>> GetFeedbacksForOrder(int orderId)
     {
         try

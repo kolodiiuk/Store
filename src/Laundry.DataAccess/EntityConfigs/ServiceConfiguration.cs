@@ -14,15 +14,18 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         
         builder.HasMany(s => s.ServiceCoupons)
             .WithOne(sc => sc.Service)
-            .HasForeignKey(sc => sc.ServiceId);
+            .HasForeignKey(sc => sc.ServiceId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasMany(s => s.BasketItems)
             .WithOne(bi => bi.Service)
-            .HasForeignKey(bi => bi.ServiceId);
+            .HasForeignKey(bi => bi.ServiceId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasMany(s => s.OrderItems)
             .WithOne(oi => oi.Service)
-            .HasForeignKey(oi => oi.ServiceId);
+            .HasForeignKey(oi => oi.ServiceId)
+            .OnDelete(DeleteBehavior.SetNull);
         
         builder.Property(s => s.Id)
             .HasColumnName("service_id");

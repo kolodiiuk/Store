@@ -39,7 +39,7 @@ public class StatisticsController : ControllerBase
     {
         try
         {
-            var stats = await _statisticsService.GetCustomersWhichOrderedTheMostOftenAsync();
+            var stats = await _statisticsService.GetTheMostFrequentlyOrderedServicesAsync();
             if (stats == null)
             {
                 return NotFound();

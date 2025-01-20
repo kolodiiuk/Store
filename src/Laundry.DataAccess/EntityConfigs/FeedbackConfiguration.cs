@@ -36,7 +36,8 @@ public class FeedbackConfiguration : IEntityTypeConfiguration<Feedback>
         builder.Property(f => f.Created)
             .HasColumnName("created")
             .IsRequired()
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+            .HasColumnType("TIMESTAMP");
         
         builder.HasCheckConstraint("CK_Feedback_Rating", "Rating >= 1 AND Rating <= 5");
     }

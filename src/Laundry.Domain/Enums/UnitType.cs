@@ -2,7 +2,9 @@ namespace Laundry.Domain.Enums;
 
 public enum UnitType
 {
-    Kg,
-    Pcs,
-    SquareMeters,
+    Piece, 
+    Kg, 
+    SquareMeters, 
+    Load, 
+    Pair 
 }

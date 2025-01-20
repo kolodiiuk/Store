@@ -14,15 +14,15 @@ public class Order : BaseEntity
     public decimal DeliveryFee { get; set; }
     public string? PaymentIntentId { get; set; }
     public int? CouponId { get; set; }
-    public DateTime CollectedDate { get; set; }
-    public DateTime DeliveredDate { get; set; }
-    public int UserId { get; set; }
-    public int AddressId { get; set; }
+    public DateTime? CollectedDate { get; set; }
+    public DateTime? DeliveredDate { get; set; }
+    public int? UserId { get; set; }
+    public int? AddressId { get; set; }
     public DateTime CreatedAt { get; set; }
     
     public Coupon? Coupon { get; set; }
-    public User User { get; set; }
-    public Address Address { get; set; }
-    public ICollection<Feedback> Feedbacks { get; set; }
-    public ICollection<OrderItem> OrderItems { get; set; }
+    public User? User { get; set; }
+    public Address? Address { get; set; }
+    public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+    public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

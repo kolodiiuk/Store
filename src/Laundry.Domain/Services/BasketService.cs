@@ -21,11 +21,15 @@ public class BasketService : IBasketService
             throw new Exception(result.Error);
         }
 
-        return result.Value;
+        return result.Value ?? Enumerable.Empty<BasketItem>();
     }
     
     public async Task<int> AddItemToBasketAsync(BasketItem basketItem)
     {
+        if (basketItem == null)
+        {
+            throw new ArgumentNullException(nameof(basketItem));
+        }
         var result = await _basketRepository.CreateAsync(basketItem);
         if (result.Failure)
         {
@@ -37,12 +41,20 @@ public class BasketService : IBasketService
 
     public async Task UpdateQuantity(int basketItemId, int newValue)
     {
+        if (newValue < 0)
+        {
+            throw new ArgumentException("Quantity can't be negative", nameof(newValue));
+        }
         var result = await _basketRepository.GetByIdAsync(basketItemId);
         if (result.Failure)
         {
             throw new Exception(result.Error);
         }
-
+        if (result.Value == null)
+        {
+            throw new Exception($"Basket item with ID {basketItemId} not found.");
+        }
+        
         result.Value.Quantity = newValue;
         await _basketRepository.UpdateAsync(result.Value);
     }
@@ -61,9 +73,9 @@ public class BasketService : IBasketService
         var result = await _basketRepository.GetUserBasketAsync(userId);
         if (result.Failure)
         {
-            throw new Exception(result.Error);
+            throw new InvalidOperationException(result.Error);
         }
 
-        return result.Value.Sum(bi => bi.Total);
+        return result.Value?.Sum(bi => bi.Total) ?? 0;
     }
 }

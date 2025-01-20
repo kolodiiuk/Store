@@ -6,7 +6,7 @@ namespace Laundry.DataAccess;
 
 public class LaundryDbContext : DbContext
 {
-    public LaundryDbContext(DbContextOptions options) : base(options)
+    public LaundryDbContext(DbContextOptions<LaundryDbContext> options) : base(options)
     {
     }
 
@@ -25,5 +25,12 @@ public class LaundryDbContext : DbContext
         base.OnModelCreating(builder);
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(LaundryDbContext)));
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.UseMySQL("Server=localhost;Port=3306;Database=laundry;User=myuser;Password=mypassword;");
     }
 }

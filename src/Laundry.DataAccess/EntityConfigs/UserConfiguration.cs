@@ -14,15 +14,18 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
  
         builder.HasMany(u => u.Orders)
             .WithOne(o => o.User)
-            .HasForeignKey(o => o.UserId);
+            .HasForeignKey(o => o.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
         
         builder.HasMany(c => c.Addresses)
             .WithOne(o => o.User)
-            .HasForeignKey(o => o.UserId);
+            .HasForeignKey(o => o.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
         
         builder.HasMany(c => c.BasketItems)
             .WithOne(o => o.User)
-            .HasForeignKey(o => o.UserId);
+            .HasForeignKey(o => o.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.Property(u => u.Id)
             .HasColumnName("user_id");

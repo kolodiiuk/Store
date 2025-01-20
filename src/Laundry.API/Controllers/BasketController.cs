@@ -52,8 +52,8 @@ public class BasketController : ControllerBase
         {
             var basketItem = _mapper.Map<BasketItem>(basketItemDto);
 
-            var result = await _basketService.AddItemToBasketAsync(basketItem);
-            return CreatedAtAction(nameof(GetBasket), new { userId = basketItemDto }, basketItem);
+            var basketItemId = await _basketService.AddItemToBasketAsync(basketItem);
+            return CreatedAtAction(nameof(GetBasket), new { BasketItemId = basketItemId }, basketItem);
         }
         catch (Exception e)
         {

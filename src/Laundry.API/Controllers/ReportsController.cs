@@ -14,19 +14,34 @@ public class ReportsController : ControllerBase
         _reportsService = reportsService;
     }
     
-    [HttpGet("cheque")]
-    public async Task<IActionResult> GetCheque(int orderId, string email)
+    [HttpGet("check")]
+    public async Task<IActionResult> GetCheque(int orderId)
     {
-        await _reportsService.SendChequeWithEmail(orderId, email);
+        try
+        {
+            var cheque = await _reportsService.CreateChequeAsync(orderId);
 
-        return Ok();
+            return File(cheque, "application/pdf", "Cheque.pdf");
+        }
+        catch (Exception e)
+        {
+            
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting cheque for {orderId}" });
+        }
     }
 
     [HttpGet("price_list")]
     public async Task<IActionResult> GetPriceList()
     {
-        var priceList = await _reportsService.GetPriceListAsync();
+        try
+        {
+            var priceList = await _reportsService.GetPriceListAsync();
 
-        return File(priceList, "application/pdf", "PriceList.pdf");
+            return File(priceList, "application/pdf", "PriceList.pdf");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem  getting price list" });
+        }
     }
 }

@@ -1,38 +1,78 @@
+using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
-using Laundry.Domain.Interfaces;
 
 namespace Laundry.Domain.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly IBasketService _basketService;
     private readonly IUserRepository _userRepository;
-
-    public AuthService(IBasketService basketService, 
-        IUserRepository userRepository)
+    private readonly IAddressRepository _addressRepository;
+    public AuthService(IUserRepository userRepository, IAddressRepository addressRepository)
     {
-        _basketService = basketService;
         _userRepository = userRepository;
+        _addressRepository = addressRepository;
     }
     
-    public Task RegisterAsync(User user)
+    public async Task<int> RegisterAsync(User user)
     {
-        throw new NotImplementedException();
+        var result = await _userRepository.CreateAsync(user);
+        if (result.Failure)
+        {
+            throw new Exception(result.Error);
+        }
+
+        return result.Value;
     }
 
-    public Task LoginAsync(string email, string password)
+    public async Task<bool> LoginAsync(string email, string password)
     {
-        throw new NotImplementedException();
+        var result = await _userRepository.GetUserByEmailPassword(email, password);
+        
+        return result.IsSuccess ? true : false;
+    }
+    
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
+    {
+        var result = await _userRepository.GetAllAsync();
+        if (result.Failure)
+        {
+            throw new Exception(result.Error);
+        }
+
+        return result.Value;
     }
 
-    public Task<IEnumerable<User>> GetUsersAsync()
+    public async Task<User> GetUserAsync(int userId)
     {
-        throw new NotImplementedException();
+        var result = await _userRepository.GetByIdAsync(userId);
+        if (result.Failure)
+        {
+            throw new Exception(result.Error);
+        }
+
+        return result.Value;
     }
 
-    public Task<User> GetUserAsync(int userId)
+    public async Task<IEnumerable<Address>> GetUserAddresses(int userId)
     {
-        throw new NotImplementedException();
+        var result = _addressRepository.GetUserAddresses(userId);
+        if (result.Failure)
+        {
+            throw new Exception(result.Error);
+        }
+
+        return result.Value;
+    }
+
+    public async Task<int> CreateAddressAsync(Address address)
+    {
+        var result = await _addressRepository.CreateAsync(address);
+        if (result.Failure)
+        {
+            throw new Exception(result.Error);
+        }
+
+        return result.Value;
     }
 }

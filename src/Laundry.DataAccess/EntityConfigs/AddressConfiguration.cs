@@ -19,8 +19,8 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         builder.HasOne(a => a.User)
             .WithMany(u => u.Addresses)
             .HasForeignKey(a => a.UserId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.Property(a => a.Id)
             .HasColumnName("address_id");
@@ -51,6 +51,6 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         
         builder.Property(a => a.UserId)
             .HasColumnName("user_id")
-            .IsRequired();
+            .IsRequired(false);
     }
 }

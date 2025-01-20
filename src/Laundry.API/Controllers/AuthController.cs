@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login(LoginDto loginDto)
+    public async Task<ActionResult<bool>> Login(LoginDto loginDto)
     {
         if (loginDto == null)
         {
@@ -30,8 +30,8 @@ public class AuthController : ControllerBase
 
         try
         {
-            await _authService.LoginAsync(loginDto.Email, loginDto.Password);
-            return NoContent();
+            var result = await _authService.LoginAsync(loginDto.Email, loginDto.Password);
+            return Ok(result);
         }
         catch (Exception e)
         {
@@ -40,18 +40,19 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult> Register(RegisterDto registerDto)
+    public async Task<ActionResult<int>> Register(RegisterDto registerDto)
     {
         if (registerDto == null)
         {
             return BadRequest(new ProblemDetails() { Title = "Invalid register data" });
         }
 
-        var user = _mapper.Map<User>(registerDto);
         try
         {
-            await _authService.RegisterAsync(user);
-            return NoContent();
+            var user = _mapper.Map<User>(registerDto);
+            user.Role = Role.User;
+            var userId = await _authService.RegisterAsync(user);
+            return CreatedAtAction(nameof(GetUser), new { id = userId }, null);
         }
         catch (Exception e)
         {
@@ -64,7 +65,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var users = await _authService.GetUsersAsync();
+            var users = await _authService.GetAllUsersAsync();
             if (users == null)
             {
                 return NotFound();
@@ -93,7 +94,47 @@ public class AuthController : ControllerBase
         }
         catch (Exception e)
         {
-            return BadRequest(new ProblemDetails() { Title = $"Problem getting a user {id}" });
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting a {nameof(User)} {id}" });
+        }
+    }
+
+    [HttpGet("addresses/{userId}")]
+    public async Task<ActionResult<List<Address>>> GetUserAddresses(int userId)
+    {
+        try
+        {
+            var addresses = await _authService.GetUserAddresses(userId);
+            if (addresses == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(addresses);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting a user {userId} addresses" });
+        }
+    }
+    
+    [HttpPost("address")]
+    public async Task<ActionResult<Service>> CreateAddress([FromForm] CreateAddressDto addressDto)
+    {
+        if (addressDto == null)
+        {
+            return BadRequest(new ProblemDetails() { Title = "Invalid address data" });
+        }
+        var address = _mapper.Map<Address>(addressDto);
+        try
+        {
+            int id = await _authService.CreateAddressAsync(address);
+            address.Id = id;
+
+            return CreatedAtRoute("getService", new { Id = address.Id }, address);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails() { Title = "Problem creating a new address" });
         }
     }
 }

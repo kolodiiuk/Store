@@ -5,38 +5,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
-public class OrderRepository : GenericRepository<Order>, IOrderRepository
+public class OrderRepository(LaundryDbContext context) : GenericRepository<Order>(context), IOrderRepository
 {
-    public OrderRepository(LaundryDbContext context) : base(context)
-    {
-    }
-
     public async Task<Result<IEnumerable<Order>>> GetOrdersOfUser(int userId)
     {
         try
         {
             var orders = await _context.Orders
-                .Where(o => o.Id == userId)
+                .Where(o => o.UserId == userId)
                 .Include(o => o.OrderItems)
                 .Include(o => o.Feedbacks)
                 .Include(o => o.User)
                 .Include(o => o.Address)
                 .Include(o => o.Coupon)
-                .FirstOrDefaultAsync();
-            if (orders == null)
-            {
-                return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"No orders");
-            }
+                .ToListAsync();
             
-            return Result<IEnumerable<Order>>.Success<IEnumerable<Order>>((IEnumerable<Order>) orders);
+            return orders.Any() 
+                ? Result<IEnumerable<Order>>.Success<IEnumerable<Order>>(orders)
+                : Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"No orders found for user {userId}");
         }
         catch (Exception e)
         {
-            return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"Error fetching order {userId}");
+            return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"Error fetching orders: {e.Message}");
         }
     }
 
-    public async Task<Result<Order>> GetOrder(int orderId)
+    public async Task<Result<Order>> GetOrderAsync(int orderId)
     {
         try
         {

@@ -7,8 +7,8 @@ public class Address : BaseEntity
     public string Street { get; set; }
     public string District { get; set; }
     public string City { get; set; }
-    public int UserId { get; set; }
+    public int? UserId { get; set; } 
     
-    public User User { get; set; }
-    public ICollection<Order> Orders { get; set; }
+    public User? User { get; set; }
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
 }

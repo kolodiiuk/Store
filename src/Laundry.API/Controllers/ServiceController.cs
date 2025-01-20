@@ -51,7 +51,7 @@ public class ServiceController : ControllerBase
         }
         catch (Exception e)
         {
-            return BadRequest(new ProblemDetails() { Title = $"Problem getting available services" });
+            return BadRequest(new ProblemDetails() { Title = $"Problem getting available services {e.Message}" });
         }
     }
 

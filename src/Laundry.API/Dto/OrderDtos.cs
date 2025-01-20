@@ -2,10 +2,6 @@ using Laundry.Domain.Enums;
 
 namespace Laundry.API.Dto;
 
-public class OrderDtos
-{
-}
-
 public class UpdateOrderStatusDto
 {
 }

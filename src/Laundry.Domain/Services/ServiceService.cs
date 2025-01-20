@@ -18,7 +18,7 @@ public class ServiceService : IServiceService
         var availableServices = await _repository.GetAllAvailableServicesAsync();
         if (availableServices.Failure)
         {
-            throw new Exception("Failure getting available services");
+            throw new Exception(availableServices.Error);
         }
 
         return availableServices.Value;

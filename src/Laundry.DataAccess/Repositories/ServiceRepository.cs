@@ -5,12 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
-public class ServiceRepository : GenericRepository<Service>, IServiceRepository
+public class ServiceRepository(LaundryDbContext context) 
+    : GenericRepository<Service>(context), IServiceRepository
 {
-    public ServiceRepository(LaundryDbContext context) : base(context)
-    {
-    }
-
     public async Task<Result<IEnumerable<Service>>> GetAllAvailableServicesAsync()
     {
         try

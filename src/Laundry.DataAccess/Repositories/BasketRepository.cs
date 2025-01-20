@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laundry.DataAccess.Repositories;
 
-public class BasketRepository : GenericRepository<BasketItem>, IBasketRepository
+public class BasketRepository(LaundryDbContext context) : GenericRepository<BasketItem>(context), IBasketRepository
 {
-    public BasketRepository(LaundryDbContext context) : base(context)
-    {
-    }
-
     public async Task<Result<IEnumerable<BasketItem>>> GetUserBasketAsync(int userId)
     {
         try
