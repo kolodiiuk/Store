@@ -26,7 +26,7 @@ public class BasketController : ControllerBase
         try
         {
             var basket = await _basketService.GetBasket(userId);
-            if (basket == null || !basket.Any())
+            if (basket == null)
             {
                 return NotFound();
             }
@@ -53,7 +53,7 @@ public class BasketController : ControllerBase
             var basketItem = _mapper.Map<BasketItem>(basketItemDto);
 
             var basketItemId = await _basketService.AddItemToBasketAsync(basketItem);
-            return CreatedAtAction(nameof(GetBasket), new { BasketItemId = basketItemId }, basketItem);
+            return CreatedAtAction(nameof(AddToBasket), new { BasketItemId = basketItemId }, basketItem);
         }
         catch (Exception e)
         {

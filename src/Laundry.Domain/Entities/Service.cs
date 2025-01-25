@@ -1,4 +1,5 @@
-﻿using Laundry.Domain.Enums;
+﻿using System.Text.Json.Serialization;
+using Laundry.Domain.Enums;
 
 namespace Laundry.Domain.Entities;
 
@@ -10,7 +11,10 @@ public class Service : BaseEntity
     public decimal PricePerUnit { get; set; }
     public UnitType UnitType { get; set; }
     public bool IsAvailable { get; set; }
+    [JsonIgnore]
     public ICollection<ServiceCoupon> ServiceCoupons { get; set; } = new List<ServiceCoupon>();
+    [JsonIgnore]
     public ICollection<BasketItem> BasketItems { get; set; } = new List<BasketItem>();
+    [JsonIgnore]
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

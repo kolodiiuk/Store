@@ -87,7 +87,7 @@ public class ServiceController : ControllerBase
             int id = await _serviceService.AddServiceAsync(service);
             service.Id = id;
 
-            return CreatedAtRoute("getService", new { Id = service.Id }, service);
+            return CreatedAtAction(nameof(CreateService), new { Id = service.Id }, service);
         }
         catch (Exception e)
         {

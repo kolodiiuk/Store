@@ -1,4 +1,6 @@
-﻿namespace Laundry.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace Laundry.Domain.Entities;
 
 public class OrderItem : BaseEntity
 {
@@ -8,6 +10,8 @@ public class OrderItem : BaseEntity
     public int? ServiceId { get; set; }
     public int OrderId { get; set; }
     
+    [JsonIgnore]
     public Service? Service { get; set; }
+    [JsonIgnore]
     public Order Order { get; set; }
 }

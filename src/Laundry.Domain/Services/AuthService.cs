@@ -1,6 +1,7 @@
 using Laundry.Domain.Contracts.Repositories;
 using Laundry.Domain.Contracts.Services;
 using Laundry.Domain.Entities;
+using Laundry.Domain.Utils;
 
 namespace Laundry.Domain.Services;
 
@@ -25,11 +26,12 @@ public class AuthService : IAuthService
         return result.Value;
     }
 
-    public async Task<bool> LoginAsync(string email, string password)
+    public async Task<User> LoginAsync(string email, string password)
     {
         var result = await _userRepository.GetUserByEmailPassword(email, password);
+        result.OnFailure(() => throw new ArgumentException(result.Error));
         
-        return result.IsSuccess ? true : false;
+        return result.Value;
     }
     
     public async Task<IEnumerable<User>> GetAllUsersAsync()

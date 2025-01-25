@@ -204,7 +204,6 @@ public class DataSeeder
                     UserId = user.Id,
                     ServiceId = service.Id,
                     Quantity = quantity,
-                    Total = service.PricePerUnit * quantity
                 });
             }
         }

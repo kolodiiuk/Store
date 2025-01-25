@@ -1,4 +1,6 @@
-﻿namespace Laundry.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace Laundry.Domain.Entities;
 
 public class Coupon : BaseEntity
 {
@@ -8,6 +10,8 @@ public class Coupon : BaseEntity
     public DateTime EndDate { get; set; }
     public int UsedCount { get; set; }
 
+    [JsonIgnore]
     public ICollection<ServiceCoupon>? ServiceCoupons { get; set; }
+    [JsonIgnore]
     public ICollection<Order>? Orders { get; set; } 
 }

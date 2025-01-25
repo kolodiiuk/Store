@@ -4,7 +4,7 @@ namespace Laundry.Domain.Statistics;
 
 public class TheMostFrequentlyOrderedServices
 {
-    public string ServiceName { get; set; }
+    public string Name { get; set; }
     public ServiceCategory ServiceCategory { get; set; }
     public decimal ServicePrice { get; set; }
     public UnitType UnitType { get; set; } 

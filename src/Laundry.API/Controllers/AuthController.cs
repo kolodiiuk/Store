@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<bool>> Login(LoginDto loginDto)
+    public async Task<ActionResult<User>> Login(LoginDto loginDto)
     {
         if (loginDto == null)
         {
@@ -98,7 +98,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpGet("addresses/{userId}")]
+    [HttpGet("address/{userId}")]
     public async Task<ActionResult<List<Address>>> GetUserAddresses(int userId)
     {
         try

@@ -13,8 +13,5 @@ public class UpdateQuantityDtoValidator : AbstractValidator<UpdateQuantityDto>
         RuleFor(x => x.NewValue)
             .GreaterThan(0)
             .WithMessage("NewValue must be greater than zero.");
-        RuleFor(x => x.UserId)
-            .GreaterThan(-1)
-            .WithMessage("UserId must be greater than -1.");
     }
 }

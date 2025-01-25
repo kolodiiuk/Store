@@ -11,5 +11,4 @@ public class UpdateQuantityDto
 {
     public int BasketItemId { get; set; }
     public int NewValue { get; set; }
-    public int UserId { get; set; }
 }

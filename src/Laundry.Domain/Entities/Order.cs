@@ -1,4 +1,5 @@
-﻿using Laundry.Domain.Enums;
+﻿using System.Text.Json.Serialization;
+using Laundry.Domain.Enums;
 
 namespace Laundry.Domain.Entities;
 
@@ -20,9 +21,14 @@ public class Order : BaseEntity
     public int? AddressId { get; set; }
     public DateTime CreatedAt { get; set; }
     
+    [JsonIgnore]
     public Coupon? Coupon { get; set; }
+    [JsonIgnore]
     public User? User { get; set; }
+    [JsonIgnore]
     public Address? Address { get; set; }
+    [JsonIgnore]
     public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+    [JsonIgnore]
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

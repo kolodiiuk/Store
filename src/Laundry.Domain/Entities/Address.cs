@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace  Laundry.Domain.Entities;
 
 public class Address : BaseEntity
@@ -9,6 +11,8 @@ public class Address : BaseEntity
     public string City { get; set; }
     public int? UserId { get; set; } 
     
+    [JsonIgnore]
     public User? User { get; set; }
+    [JsonIgnore]
     public ICollection<Order> Orders { get; set; } = new List<Order>();
 }

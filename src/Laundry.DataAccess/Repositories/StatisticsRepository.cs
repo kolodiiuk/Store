@@ -13,17 +13,18 @@ public class StatisticsRepository(LaundryDbContext context, IDateTimeProvider da
     {
         try
         {
-            var statistics = await context.Set<CustomersWhichOrderedTheMostOften>()
-                .FromSqlRaw(@"SELECT u.first_name AS FirstName,
-                                  u.last_name AS LastName, 
-                                  COUNT(o.order_id) AS OrderCount,
-                                  AVG(COALESCE(f.rating, 0)) AS AvgRating,
-                                  SUM(o.subtotal - COALESCE(o.discount, 0)) AS SumOrders
-                              FROM user u
-                              INNER JOIN orders o ON u.user_id = o.user_id
-                              LEFT JOIN feedback f ON o.order_id = f.order_id
-                              WHERE u.role = 0
-                              GROUP BY u.user_id, u.first_name, u.last_name;")
+            var statistics = await context.Database
+                .SqlQuery<CustomersWhichOrderedTheMostOften>(
+                    @$"SELECT u.first_name AS FirstName,
+                              u.last_name AS LastName, 
+                              COUNT(o.order_id) AS OrderCount,
+                              AVG(COALESCE(f.rating, 0)) AS AvgRating,
+                              SUM(o.subtotal - COALESCE(o.discount, 0)) AS SumOrders
+                       FROM user u
+                       INNER JOIN orders o ON u.user_id = o.user_id
+                       LEFT JOIN feedback f ON o.order_id = f.order_id
+                       WHERE u.role = 0
+                       GROUP BY u.user_id, u.first_name, u.last_name;")
                 .ToListAsync();
 
             if (statistics == null)
@@ -48,8 +49,8 @@ public class StatisticsRepository(LaundryDbContext context, IDateTimeProvider da
     {
         try
         {
-            var statistics = await context.Set<TheMostFrequentlyOrderedServices>()
-                .FromSqlRaw(@$"SELECT s.service_name ServiceName, 
+            var statistics = await context.Database
+                .SqlQuery<TheMostFrequentlyOrderedServices>(@$"SELECT s.name Name, 
                                       s.category ServiceCategory, 
                                       s.price_per_unit ServicePrice, 
                                       s.unit_type UnitType, 
@@ -58,7 +59,7 @@ public class StatisticsRepository(LaundryDbContext context, IDateTimeProvider da
                                FROM service s
                                LEFT JOIN order_item oi ON s.service_id = oi.service_id
                                LEFT JOIN orders o ON oi.order_id = o.order_id
-                               GROUP BY s.service_name, s.category, s.price_per_unit, s.unit_type
+                               GROUP BY s.name, s.category, s.price_per_unit, s.unit_type
                                ORDER BY OrderCount DESC
                                LIMIT 10;")
                 .ToListAsync();
