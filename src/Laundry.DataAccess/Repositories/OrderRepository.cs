@@ -22,7 +22,7 @@ public class OrderRepository(LaundryDbContext context) : GenericRepository<Order
             
             return orders.Any() 
                 ? Result<IEnumerable<Order>>.Success<IEnumerable<Order>>(orders)
-                : Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"No orders found for user {userId}");
+                : Result<IEnumerable<Order>>.Success<IEnumerable<Order>>(new List<Order>());
         }
         catch (Exception e)
         {

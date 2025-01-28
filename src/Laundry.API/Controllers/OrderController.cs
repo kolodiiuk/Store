@@ -20,7 +20,6 @@ public class OrderController : ControllerBase
         _mapper = mapper;
     }
 
-    // done
     [HttpGet("all")]
     public async Task<ActionResult<List<Order>>> GetAllOrdersAsync()
     {
@@ -40,7 +39,6 @@ public class OrderController : ControllerBase
         }
     }
 
-    // done
     [HttpGet("user/{userId}")]
     public async Task<ActionResult<List<Order>>> GetUserOrdersAsync(int userId)
     {
@@ -59,7 +57,6 @@ public class OrderController : ControllerBase
             return BadRequest(new ProblemDetails() { Title = $"Problem getting user {userId} orders" });
         }
     }
-    // done
     [HttpGet("{id}")]
     public async Task<ActionResult<Order>> GetOrderAsync(int id)
     {
@@ -79,7 +76,6 @@ public class OrderController : ControllerBase
         }
     }
 
-    // done
     [HttpPost]
     public async Task<ActionResult<Order>> PlaceOrder([FromForm] Laundry.Domain.Utils.CreateOrderDto orderDto)
     {
@@ -100,18 +96,17 @@ public class OrderController : ControllerBase
         }
     }
 
-    // done
-    [HttpPut("status/{orderId}")]
-    public async Task<ActionResult> UpdateOrderStatus(int orderId, int orderStatus)
+    [HttpPut]
+    public async Task<ActionResult> UpdateOrder(Order order)
     {
         try
         {
-            await _orderService.UpdateOrderStatusAsync(orderId, (OrderStatus) orderStatus);
+            await _orderService.UpdateOrderAsync(order);
             return Ok();
         }
         catch (Exception e)
         {
-            return BadRequest(new ProblemDetails() { Title = $"Problem  updating an order {orderId}" });
+            return BadRequest(new ProblemDetails() { Title = $"Problem  updating an order {order.Id}" });
         }
     }
 }

@@ -81,6 +81,7 @@ public class ServiceController : ControllerBase
         {
             return BadRequest(new ProblemDetails() { Title = "Invalid service data" });
         }
+
         var service = _mapper.Map<Service>(serviceDto);
         try
         {
@@ -102,11 +103,13 @@ public class ServiceController : ControllerBase
         {
             return BadRequest(new ProblemDetails() { Title = "Invalid service data" });
         }
+
         var service = await _serviceService.GetServiceByIdAsync(serviceDto.Id);
         if (service == null)
         {
             return NotFound();
         }
+
         _mapper.Map(serviceDto, service);
         try
         {

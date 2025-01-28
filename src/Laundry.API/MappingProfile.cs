@@ -23,5 +23,6 @@ public class MappingProfile : Profile
         CreateMap<BasketItem, CreateBasketItemDto>().ReverseMap();
         // Address DTOS
         CreateMap<Address, CreateAddressDto>().ReverseMap();
+        CreateMap<Address, UpdateAddressDto>().ReverseMap();
     }
 }

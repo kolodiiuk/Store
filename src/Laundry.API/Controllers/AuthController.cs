@@ -13,8 +13,7 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IMapper _mapper;
 
-    public AuthController(IAuthService authService,
-        IMapper mapper)
+    public AuthController(IAuthService authService, IMapper mapper)
     {
         _authService = authService;
         _mapper = mapper;
@@ -95,46 +94,6 @@ public class AuthController : ControllerBase
         catch (Exception e)
         {
             return BadRequest(new ProblemDetails() { Title = $"Problem getting a {nameof(User)} {id}" });
-        }
-    }
-
-    [HttpGet("address/{userId}")]
-    public async Task<ActionResult<List<Address>>> GetUserAddresses(int userId)
-    {
-        try
-        {
-            var addresses = await _authService.GetUserAddresses(userId);
-            if (addresses == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(addresses);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem getting a user {userId} addresses" });
-        }
-    }
-    
-    [HttpPost("address")]
-    public async Task<ActionResult<Service>> CreateAddress([FromForm] CreateAddressDto addressDto)
-    {
-        if (addressDto == null)
-        {
-            return BadRequest(new ProblemDetails() { Title = "Invalid address data" });
-        }
-        var address = _mapper.Map<Address>(addressDto);
-        try
-        {
-            int id = await _authService.CreateAddressAsync(address);
-            address.Id = id;
-
-            return CreatedAtRoute("getService", new { Id = address.Id }, address);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = "Problem creating a new address" });
         }
     }
 }

@@ -9,7 +9,9 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly IAddressRepository _addressRepository;
-    public AuthService(IUserRepository userRepository, IAddressRepository addressRepository)
+    
+    public AuthService(IUserRepository userRepository, 
+        IAddressRepository addressRepository)
     {
         _userRepository = userRepository;
         _addressRepository = addressRepository;
@@ -56,7 +58,15 @@ public class AuthService : IAuthService
         return result.Value;
     }
 
-    public async Task<IEnumerable<Address>> GetUserAddresses(int userId)
+    public async Task<IEnumerable<Address>> GetAllAddressesAsync()
+    {
+        var result = await _addressRepository.GetAllAsync();
+        result.OnFailure(() => throw new Exception(result.Error));
+
+        return result.Value;
+    }
+
+    public async Task<IEnumerable<Address>> GetUserAddressesAsync(int userId)
     {
         var result = _addressRepository.GetUserAddresses(userId);
         if (result.Failure)
@@ -64,6 +74,15 @@ public class AuthService : IAuthService
             throw new Exception(result.Error);
         }
 
+        return result.Value;
+    }
+
+    public async Task<Address> GetAddressByIdAsync(int addressId)
+    {
+        var result = await _addressRepository.GetByIdAsync(addressId);
+        result.OnFailure(
+            () => throw new InvalidOperationException(result.Error));
+        
         return result.Value;
     }
 
@@ -76,5 +95,19 @@ public class AuthService : IAuthService
         }
 
         return result.Value;
+    }
+
+    public async Task UpdateAddressAsync(Address address)
+    {
+        var result = await _addressRepository.UpdateAsync(address);
+        result.OnFailure(
+            () => throw new InvalidOperationException(result.Error));
+    }
+
+    public async Task DeleteAddressAsync(int addressId)
+    {
+        var result = await _addressRepository.DeleteAsync(addressId);
+        result.OnFailure(
+            () => throw new InvalidOperationException(result.Error));
     }
 }

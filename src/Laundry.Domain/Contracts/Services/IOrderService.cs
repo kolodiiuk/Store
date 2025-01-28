@@ -10,6 +10,5 @@ public interface IOrderService
     Task<IEnumerable<Order>> GetAllOrdersAsync();
     Task<IEnumerable<Order>> GetUserOrdersAsync(int userId);
     Task<Order> GetOrderAsync(int orderId);
-    Task UpdateOrderStatusAsync(int orderId, OrderStatus status);
-    Task UpdatePaymentStatusAsync(int orderId, PaymentStatus status);
+    Task UpdateOrderAsync(Order order);
 }

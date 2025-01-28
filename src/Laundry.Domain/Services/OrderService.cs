@@ -71,8 +71,9 @@ public class OrderService : IOrderService
                 Subtotal = default,
                 Description = order.Description,
                 PaymentMethod = order.PaymentMethod,
-                PaymentStatus = PaymentStatus.Paid,
+                PaymentStatus = PaymentStatus.NotPaid,
                 HasCoupon = false,
+                Discount = 0,
                 DeliveryFee = order.DeliveryFee,
                 AddressId = order.AddressId,
                 UserId = order.UserId,
@@ -131,16 +132,9 @@ public class OrderService : IOrderService
         return orderItems;
     }
 
-    public async Task UpdateOrderStatusAsync(int orderId, OrderStatus status)
+    public async Task UpdateOrderAsync(Order order)
     {
-        var result = await _orderRepository.GetOrderAsync(orderId);
+        var result = await _orderRepository.UpdateAsync(order);
         result.OnFailure(() => throw new Exception(result.Error));
-        result.Value.Status = status;
-        await _orderRepository.UpdateOrderAsync(result.Value);
-    }
-
-    public Task UpdatePaymentStatusAsync(int orderId, PaymentStatus status)
-    {
-        throw new NotImplementedException();
     }
 }
