@@ -10,4 +10,5 @@ public interface IOrderRepository : IGenericRepository<Order>
     Task<Result<IEnumerable<Order>>> GetAllOrders();
     Task<Result<int>> CreateOrderAsync(Order order);
     Task<Result> UpdateOrderAsync(Order order);
+    Task<Result<IEnumerable<OrderItem>>> GetOrderItemsAsync(int orderId);
 }

@@ -28,7 +28,7 @@ public class OrderController : ControllerBase
             var orders = await _orderService.GetAllOrdersAsync();
             if (orders == null)
             {
-                return NotFound();
+                return Ok(new List<Order>());
             }
 
             return Ok(orders);
@@ -47,7 +47,7 @@ public class OrderController : ControllerBase
             var orders = await _orderService.GetUserOrdersAsync(userId);
             if (orders == null)
             {
-                return NotFound();
+                return Ok(new List<Order>());
             }
 
             return Ok(orders);
@@ -107,6 +107,31 @@ public class OrderController : ControllerBase
         catch (Exception e)
         {
             return BadRequest(new ProblemDetails() { Title = $"Problem  updating an order {order.Id}" });
+        }
+    }
+
+    [HttpGet("orderItems/{orderId:int}")]
+    public async Task<ActionResult<List<OrderItem>>> GetOrderItems(int orderId)
+    {
+        if (orderId < 0)
+        {
+            return BadRequest(new ProblemDetails() 
+                { Title = $"Invalid orderId: {orderId}" });
+        }
+        try
+        {
+            var orderItems = await _orderService.GetOrderItemsAsync(orderId);
+            if (orderItems == null)
+            {
+                return Ok(new List<OrderItem>());
+            }
+
+            return Ok(orderItems);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ProblemDetails()
+                { Title = $"Problem getting order items for order {orderId}" });
         }
     }
 }

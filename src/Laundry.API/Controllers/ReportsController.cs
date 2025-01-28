@@ -14,7 +14,7 @@ public class ReportsController : ControllerBase
         _reportsService = reportsService;
     }
     
-    [HttpGet("check")]
+    [HttpGet("cheque/{orderId}")]
     public async Task<IActionResult> GetCheque(int orderId)
     {
         try

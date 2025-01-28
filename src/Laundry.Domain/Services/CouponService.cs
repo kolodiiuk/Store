@@ -17,10 +17,7 @@ public class CouponService : ICouponService
     public async Task<Result<IEnumerable<Coupon>>> GetAllCoupons()
     {
         var result = await _couponRepository.GetAllAsync();
-        if (result.Failure)
-        {
-            return Result<IEnumerable<Coupon>>.Fail<IEnumerable<Coupon>>(result.Error);
-        }
+        result.OnFailure(() => Result<IEnumerable<Coupon>>.Fail<IEnumerable<Coupon>>(result.Error));
 
         return Result<IEnumerable<Coupon>>.Success(result.Value);
     }
@@ -28,10 +25,7 @@ public class CouponService : ICouponService
     public async Task<int> CreateCoupon(Coupon coupon)
     {
         var result = await _couponRepository.CreateAsync(coupon);
-        if (result.Failure)
-        {
-            throw new Exception(result.Error);
-        }
+        result.OnFailure(() => throw new Exception(result.Error));
 
         return result.Value;
     }
@@ -39,19 +33,13 @@ public class CouponService : ICouponService
     public async Task UpdateCoupon(Coupon coupon)
     {
         var result = await _couponRepository.UpdateAsync(coupon);
-        if (result.Failure)
-        {
-            throw new Exception(result.Error);
-        }
+        result.OnFailure(() => throw new Exception(result.Error));
     }
 
     public async Task DeleteCoupon(int couponId)
     {
         var result = await _couponRepository.DeleteAsync(couponId);
-        if (result.Failure)
-        {
-            throw new Exception(result.Error);
-        }
+        result.OnFailure(() => throw new Exception(result.Error));
     }
 
     public async Task<bool> ValidateCoupon(string code)

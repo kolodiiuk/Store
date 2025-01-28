@@ -137,4 +137,12 @@ public class OrderService : IOrderService
         var result = await _orderRepository.UpdateAsync(order);
         result.OnFailure(() => throw new Exception(result.Error));
     }
+
+    public async Task<IEnumerable<OrderItem>> GetOrderItemsAsync(int orderId)
+    {
+        var result = await _orderRepository.GetOrderItemsAsync(orderId);
+        result.OnFailure(() => throw new Exception(result.Error));
+        
+        return result.Value;
+    }
 }

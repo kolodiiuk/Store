@@ -19,14 +19,13 @@ public class OrderRepository(LaundryDbContext context) : GenericRepository<Order
                 .Include(o => o.Address)
                 .Include(o => o.Coupon)
                 .ToListAsync();
-            
-            return orders.Any() 
-                ? Result<IEnumerable<Order>>.Success<IEnumerable<Order>>(orders)
-                : Result<IEnumerable<Order>>.Success<IEnumerable<Order>>(new List<Order>());
+
+            return Result<IEnumerable<Order>>.Success<IEnumerable<Order>>(orders);
         }
         catch (Exception e)
         {
-            return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"Error fetching orders: {e.Message}");
+            return Result<IEnumerable<Order>>
+                .Fail<IEnumerable<Order>>($"Error fetching orders: {e.Message}");
         }
     }
 
@@ -37,6 +36,7 @@ public class OrderRepository(LaundryDbContext context) : GenericRepository<Order
             var order = await _context.Orders
                 .Where(o => o.Id == orderId)
                 .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Service)
                 .Include(o => o.Feedbacks)
                 .Include(o => o.User)
                 .Include(o => o.Address)
@@ -67,15 +67,13 @@ public class OrderRepository(LaundryDbContext context) : GenericRepository<Order
                 .Include(o => o.Coupon)
                 .AsNoTracking()
                 .ToListAsync();
-            if (orders == null)
-            {
-                return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"No orders");
-            }
+            
             return Result<IEnumerable<Order>>.Success((IEnumerable<Order>) orders);
         }
         catch (Exception ex)
         {
-            return Result<IEnumerable<Order>>.Fail<IEnumerable<Order>>($"Error fetching orders: {ex.Message}");
+            return Result<IEnumerable<Order>>
+                .Fail<IEnumerable<Order>>($"Error fetching orders: {ex.Message}");
         }
     }
 
@@ -106,6 +104,23 @@ public class OrderRepository(LaundryDbContext context) : GenericRepository<Order
         catch (Exception e)
         {
             return Result.Fail(e.Message);
+        }
+    }
+
+    public async Task<Result<IEnumerable<OrderItem>>> GetOrderItemsAsync(int orderId)
+    {
+        try
+        {
+            var orderItems = _context.OrderItems.Where(oi => oi.OrderId == orderId);
+
+            return Result<IEnumerable<OrderItem>>
+                .Success<IEnumerable<OrderItem>>(orderItems);
+        }
+        catch (Exception e)
+        {
+            return Result<IEnumerable<OrderItem>>
+                .Fail<IEnumerable<OrderItem>>(
+                    $"Problem getting order items of order {orderId}: {e.Message}");
         }
     }
 }
