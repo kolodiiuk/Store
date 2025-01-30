@@ -14,35 +14,35 @@ public class CouponService : ICouponService
         _couponRepository = couponRepository;
     }
 
-    public async Task<Result<IEnumerable<Coupon>>> GetAllCoupons()
+    public async Task<Result<IEnumerable<Coupon>>> GetAllCouponsAsync()
     {
-        var result = await _couponRepository.GetAllAsync();
+        var result = await _couponRepository.GetAllCouponsAsync();
         result.OnFailure(() => Result<IEnumerable<Coupon>>.Fail<IEnumerable<Coupon>>(result.Error));
 
         return Result<IEnumerable<Coupon>>.Success(result.Value);
     }
 
-    public async Task<int> CreateCoupon(Coupon coupon)
+    public async Task<int> CreateCouponAsync(Coupon coupon, IEnumerable<int> serviceIds)
     {
-        var result = await _couponRepository.CreateAsync(coupon);
+        var result = await _couponRepository.CreateCouponAsync(coupon, serviceIds);
         result.OnFailure(() => throw new Exception(result.Error));
 
         return result.Value;
     }
 
-    public async Task UpdateCoupon(Coupon coupon)
+    public async Task UpdateCouponAsync(Coupon coupon, IEnumerable<int> serviceIds)
     {
-        var result = await _couponRepository.UpdateAsync(coupon);
+        var result = await _couponRepository.UpdateCouponAsync(coupon, serviceIds);
         result.OnFailure(() => throw new Exception(result.Error));
     }
 
-    public async Task DeleteCoupon(int couponId)
+    public async Task DeleteCouponAsync(int couponId)
     {
-        var result = await _couponRepository.DeleteAsync(couponId);
+        var result = await _couponRepository.DeleteCouponAsync(couponId);
         result.OnFailure(() => throw new Exception(result.Error));
     }
 
-    public async Task<bool> ValidateCoupon(string code)
+    public async Task<bool> ValidateCouponAsync(string code)
     {
         var result = await _couponRepository.GetCouponByCodeAsync(code);
         if (result.Failure && result.Error.Contains("Data access"))

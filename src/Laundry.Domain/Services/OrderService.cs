@@ -14,6 +14,7 @@ public class OrderService : IOrderService
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IAddressRepository _addressRepository;
     private readonly IServiceRepository _serviceRepository;
+    private readonly ICouponRepository _couponRepository;
     private readonly IUserRepository _userRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
@@ -21,6 +22,7 @@ public class OrderService : IOrderService
         IOrderItemRepository orderItemRepository,
         IAddressRepository addressRepository,
         IServiceRepository serviceRepository,
+        ICouponRepository couponRepository,
         IUserRepository userRepository,
         IDateTimeProvider dateTimeProvider)
     {
@@ -30,6 +32,7 @@ public class OrderService : IOrderService
         _userRepository = userRepository;
         _dateTimeProvider = dateTimeProvider;
         _serviceRepository = serviceRepository;
+        _couponRepository = couponRepository;
     }
 
     public async Task<IEnumerable<Order>> GetAllOrdersAsync()
@@ -72,7 +75,7 @@ public class OrderService : IOrderService
                 Description = order.Description,
                 PaymentMethod = order.PaymentMethod,
                 PaymentStatus = PaymentStatus.NotPaid,
-                HasCoupon = false,
+                HasCoupon = order.HasCoupon,
                 Discount = 0,
                 DeliveryFee = order.DeliveryFee,
                 AddressId = order.AddressId,
@@ -85,13 +88,18 @@ public class OrderService : IOrderService
             result.OnFailure(() => 
                 throw new InvalidOperationException("Problem creating a new order record"));
             newOrder.Id = result.Value;
+            if (order.HasCoupon)
+            {
+                
+            }
 
             var orderItems = await CreateOrderItems(order, newOrder.Id);
             newOrder.OrderItems = orderItems;
             newOrder.Subtotal = orderItems.Sum(oi => oi.Quantity * oi.CurrentUnitPrice);
             var updateResult = await _orderRepository.UpdateOrderAsync(newOrder);
             updateResult.OnFailure (() =>
-                throw new InvalidOperationException($"Problem updating order: {updateResult.Error}"));
+                throw new InvalidOperationException(
+                    $"Problem updating order: {updateResult.Error}"));
 
             transaction.Complete();
             

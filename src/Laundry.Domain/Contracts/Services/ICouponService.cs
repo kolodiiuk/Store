@@ -5,9 +5,9 @@ namespace Laundry.Domain.Contracts.Services;
 
 public interface ICouponService
 {
-    Task<Result<IEnumerable<Coupon>>> GetAllCoupons(); 
-    Task<int> CreateCoupon(Coupon coupon);
-    Task UpdateCoupon(Coupon coupon);
-    Task DeleteCoupon(int couponId);
-    Task<bool> ValidateCoupon(string code);
+    Task<Result<IEnumerable<Coupon>>> GetAllCouponsAsync(); 
+    Task<int> CreateCouponAsync(Coupon coupon, IEnumerable<int> serviceIds);
+    Task UpdateCouponAsync(Coupon coupon, IEnumerable<int> serviceIds);
+    Task DeleteCouponAsync(int couponId);
+    Task<bool> ValidateCouponAsync(string code);
 }

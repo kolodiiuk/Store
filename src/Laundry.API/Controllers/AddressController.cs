@@ -70,7 +70,7 @@ public class AddressController : ControllerBase
             int id = await _authService.CreateAddressAsync(address);
             address.Id = id;
 
-            return CreatedAtRoute("getService", new { Id = address.Id }, address);
+            return CreatedAtAction(nameof(CreateAddress), new { Id = address.Id }, address);
         }
         catch (Exception e)
         {

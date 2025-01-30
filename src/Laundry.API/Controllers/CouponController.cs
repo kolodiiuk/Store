@@ -20,15 +20,34 @@ public class CouponController : ControllerBase
     }
 
     [HttpGet(Name = "all")]
-    public async Task<ActionResult<List<Coupon>>> GetCoupons()
+    public async Task<ActionResult<List<UpdateCouponDto>>> GetCoupons()
     {
-        var result = await _couponService.GetAllCoupons();
+        var result = await _couponService.GetAllCouponsAsync();
         if (result.Failure)
         {
             return BadRequest(result.Error);
         }
 
-        return Ok(result.Value.ToList());
+        List<UpdateCouponDto> couponDtos = new List<UpdateCouponDto>();
+        foreach (var c in result.Value)
+        {
+            UpdateCouponDto dto = new UpdateCouponDto()
+            {
+                Code = c.Code,
+                EndDate = c.EndDate,
+                StartDate = c.StartDate,
+                Id = c.Id,
+                Percentage = c.Percentage,
+                UsedCount = c.UsedCount,
+                ServiceIds = c.ServiceCoupons
+                    .Select(coupon => coupon.ServiceId)
+                    .ToList()
+            };
+            couponDtos.Add(dto);
+        }
+
+
+        return Ok(couponDtos);
     }
 
     [HttpPost]
@@ -43,8 +62,8 @@ public class CouponController : ControllerBase
 
         try
         {
-            var couponId = await _couponService.CreateCoupon(coupon);
-            
+            var couponId = await _couponService.CreateCouponAsync(coupon, couponDto.ServiceIds);
+
             return Ok(couponId);
         }
         catch (Exception ex)
@@ -58,7 +77,7 @@ public class CouponController : ControllerBase
     {
         try
         {
-            var isValid = await _couponService.ValidateCoupon(code);
+            var isValid = await _couponService.ValidateCouponAsync(code);
             if (!isValid)
             {
                 return NotFound($"No such coupon {code}");
@@ -84,8 +103,8 @@ public class CouponController : ControllerBase
 
         try
         {
-            await _couponService.UpdateCoupon(coupon);
-            
+            await _couponService.UpdateCouponAsync(coupon, couponDto.ServiceIds ?? new List<int>());
+
             return Ok(coupon);
         }
         catch (Exception ex)
@@ -99,8 +118,8 @@ public class CouponController : ControllerBase
     {
         try
         {
-            await _couponService.DeleteCoupon(couponId);
-            
+            await _couponService.DeleteCouponAsync(couponId);
+
             return NoContent();
         }
         catch (Exception ex)

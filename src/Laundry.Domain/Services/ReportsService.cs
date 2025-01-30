@@ -3,6 +3,9 @@ using iText.Layout;
 using iText.Layout.Element;
 using Laundry.Domain.Contracts.Services;
 using System.IO;
+using iText.Kernel.Font;
+using iText.Layout.Font;
+using iText.Layout.Properties;
 using Laundry.Domain.Utils;
 
 namespace Laundry.Domain.Services;
@@ -65,9 +68,9 @@ public class ReportsService : IReportsService
 
         var discount = order.Discount ?? 0;
         var total = order.Subtotal - discount + order.DeliveryFee;
-        document.Add(new Paragraph($"Discount: {discount:C} UAH"));
-        document.Add(new Paragraph($"Delivery fee: {order.DeliveryFee:C} UAH"));
-        document.Add(new Paragraph($"Total: {total:C} UAH"));
+        document.Add(new Paragraph($"Discount: {discount} UAH"));
+        document.Add(new Paragraph($"Delivery fee: {order.DeliveryFee} UAH"));
+        document.Add(new Paragraph($"Total: {total} UAH"));
         document.Add(new Paragraph($"Date: {_dateTime.Now.ToLongDateString()} " +
                                    $"{_dateTime.Now.ToLongTimeString()}"));
         

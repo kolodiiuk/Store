@@ -10,7 +10,7 @@ public class CreateOrderDto
     public PaymentMethod PaymentMethod { get; set; }
     public decimal DeliveryFee { get; set; }
     public bool HasCoupon { get; set; }
-    public int? CouponId { get; set; }
+    public string? Code { get; set; }
     public ICollection<CreateOrderItemDto> OrderItems { get; set; }
 }
 
