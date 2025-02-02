@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.11.0"/>
+        <PackageReference Include="Stripe.net" Version="47.2.0"/>
+        <!-- Add the correct BouncyCastle adapter for iText 7 -->
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\8.0.0\lib\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>
