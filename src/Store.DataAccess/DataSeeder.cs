@@ -74,7 +74,7 @@ public class DataSeeder
                 LastName = LastNames[i],
                 Email = $"{FirstNames[i].ToLower()}.{LastNames[i].ToLower()}@example.com",
                 PhoneNumber = $"555{i:D4}1234",
-                Password = "hashed_password",
+                PasswordHash = "hashed_password",
                 Role = i == 0 ? Role.Admin : Role.User
             });
         }
@@ -109,18 +109,18 @@ public class DataSeeder
     {
         var productList = new List<Product>
         {
-            new() { Name = "Regular Wash & Fold", Category = ProductCategory.Washing, Description = ProductDescriptions[0], PricePerUnit = 10.00m, UnitType = UnitType.Kg, IsAvailable = true },
-            new() { Name = "Premium Dry Cleaning", Category = ProductCategory.DryCleaning, Description = ProductDescriptions[1], PricePerUnit = 15.00m, UnitType = UnitType.Piece, IsAvailable = true },
-            new() { Name = "Express Ironing", Category = ProductCategory.Ironing, Description = ProductDescriptions[2], PricePerUnit = 5.00m, UnitType = UnitType.Piece, IsAvailable = true },
-            new() { Name = "Bedding & Linens", Category = ProductCategory.Washing, Description = ProductDescriptions[3], PricePerUnit = 20.00m, UnitType = UnitType.Piece, IsAvailable = true },
-            new() { Name = "Suit Cleaning", Category = ProductCategory.DryCleaning, Description = ProductDescriptions[4], PricePerUnit = 25.00m, UnitType = UnitType.Piece, IsAvailable = true },
-            new() { Name = "Stain Removal", Category = ProductCategory.AddOn, Description = ProductDescriptions[5], PricePerUnit = 12.00m, UnitType = UnitType.Piece, IsAvailable = true },
-            new() { Name = "Curtain Cleaning", Category = ProductCategory.DryCleaning, Description = ProductDescriptions[6], PricePerUnit = 30.00m, UnitType = UnitType.Piece, IsAvailable = true },
-            new() { Name = "Shoe Cleaning", Category = ProductCategory.AddOn, Description = ProductDescriptions[7], PricePerUnit = 18.00m, UnitType = UnitType.Pair, IsAvailable = true },
-            new() { Name = "Bulk Washing", Category = ProductCategory.Washing, Description = "Economical bulk washing product", PricePerUnit = 8.00m, UnitType = UnitType.Kg, IsAvailable = true },
-            new() { Name = "Wedding Dress Care", Category = ProductCategory.AddOn, Description = "Special care for wedding dresses", PricePerUnit = 99.99m, UnitType = UnitType.Piece, IsAvailable = true },
-            new() { Name = "Sports Gear Cleaning", Category = ProductCategory.AddOn, Description = "Specialized cleaning for sports equipment", PricePerUnit = 15.00m, UnitType = UnitType.Piece, IsAvailable = true },
-            new() { Name = "Premium Ironing", Category = ProductCategory.Ironing, Description = "Detailed ironing product", PricePerUnit = 7.50m, UnitType = UnitType.Piece, IsAvailable = true }
+            new() { Name = "Regular Wash & Fold", Category = ProductCategory.Washing, Description = ProductDescriptions[0], Price = 10.00m, UnitType = UnitType.Kg, IsAvailable = true },
+            new() { Name = "Premium Dry Cleaning", Category = ProductCategory.DryCleaning, Description = ProductDescriptions[1], Price = 15.00m, UnitType = UnitType.Piece, IsAvailable = true },
+            new() { Name = "Express Ironing", Category = ProductCategory.Ironing, Description = ProductDescriptions[2], Price = 5.00m, UnitType = UnitType.Piece, IsAvailable = true },
+            new() { Name = "Bedding & Linens", Category = ProductCategory.Washing, Description = ProductDescriptions[3], Price = 20.00m, UnitType = UnitType.Piece, IsAvailable = true },
+            new() { Name = "Suit Cleaning", Category = ProductCategory.DryCleaning, Description = ProductDescriptions[4], Price = 25.00m, UnitType = UnitType.Piece, IsAvailable = true },
+            new() { Name = "Stain Removal", Category = ProductCategory.AddOn, Description = ProductDescriptions[5], Price = 12.00m, UnitType = UnitType.Piece, IsAvailable = true },
+            new() { Name = "Curtain Cleaning", Category = ProductCategory.DryCleaning, Description = ProductDescriptions[6], Price = 30.00m, UnitType = UnitType.Piece, IsAvailable = true },
+            new() { Name = "Shoe Cleaning", Category = ProductCategory.AddOn, Description = ProductDescriptions[7], Price = 18.00m, UnitType = UnitType.Pair, IsAvailable = true },
+            new() { Name = "Bulk Washing", Category = ProductCategory.Washing, Description = "Economical bulk washing product", Price = 8.00m, UnitType = UnitType.Kg, IsAvailable = true },
+            new() { Name = "Wedding Dress Care", Category = ProductCategory.AddOn, Description = "Special care for wedding dresses", Price = 99.99m, UnitType = UnitType.Piece, IsAvailable = true },
+            new() { Name = "Sports Gear Cleaning", Category = ProductCategory.AddOn, Description = "Specialized cleaning for sports equipment", Price = 15.00m, UnitType = UnitType.Piece, IsAvailable = true },
+            new() { Name = "Premium Ironing", Category = ProductCategory.Ironing, Description = "Detailed ironing product", Price = 7.50m, UnitType = UnitType.Piece, IsAvailable = true }
         };
         await context.Products.AddRangeAsync(productList);
         await context.SaveChangesAsync();
@@ -166,7 +166,7 @@ public class DataSeeder
             {
                 var product = products[random.Next(products.Count)];
                 var quantity = random.Next(1, 5);
-                var total = product.PricePerUnit * quantity;
+                var total = product.Price * quantity;
                 subtotal += total;
 
                 await context.OrderItems.AddAsync(new OrderItem
@@ -174,7 +174,7 @@ public class DataSeeder
                     OrderId = order.Id,
                     ProductId = product.Id,
                     Quantity = quantity,
-                    CurrentUnitPrice = product.PricePerUnit,
+                    CurrentUnitPrice = product.Price,
                     Total = total
                 });
             }

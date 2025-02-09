@@ -34,7 +34,7 @@ public class BasketItemConfiguration : IEntityTypeConfiguration<BasketItem>
             .IsRequired();
 
         builder.Property(bi => bi.ProductId)
-            .HasColumnName("service_id");
+            .HasColumnName("product_id");
 
         builder.Property(bi => bi.UserId)
             .HasColumnName("user_id");

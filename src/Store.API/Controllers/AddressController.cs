@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Store.Domain.Contracts.Services;
 using Store.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ public class AddressController : ControllerBase
         _mapper = mapper;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("all")]
     public async Task<ActionResult<List<Address>>> GetAllAddressesAsync()
     {
@@ -33,6 +35,7 @@ public class AddressController : ControllerBase
         }
     }
     
+    [Authorize(Roles = "User")]
     [HttpGet("user/{userId:int}")]
     public async Task<ActionResult<List<Address>>> GetUserAddressesAsync(int userId)
     {
@@ -47,6 +50,7 @@ public class AddressController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "User")]
     [HttpPost]
     public async Task<ActionResult<Address>> CreateAddressAsync([FromBody] CreateAddressDto addressDto)
     {
@@ -69,6 +73,7 @@ public class AddressController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "User")]
     [HttpPut]
     public async Task<ActionResult> UpdateAddressAsync([FromBody] UpdateAddressDto addressDto)
     {
@@ -96,6 +101,7 @@ public class AddressController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "User")]
     [HttpDelete("{addressId:int}")]
     public async Task<ActionResult> DeleteAddressAsync(int addressId)
     {

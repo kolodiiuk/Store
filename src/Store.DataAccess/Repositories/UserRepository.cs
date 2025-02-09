@@ -28,7 +28,7 @@ public class UserRepository(AppDbContext context) : GenericRepository<User>(cont
         try
         {
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+                .FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == password);
 
             if (user == null)
             {

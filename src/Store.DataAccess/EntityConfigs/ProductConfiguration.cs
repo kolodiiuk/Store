@@ -28,7 +28,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .OnDelete(DeleteBehavior.SetNull);
         
         builder.Property(s => s.Id)
-            .HasColumnName("service_id");
+            .HasColumnName("product_id");
         
         builder.Property(s => s.Name)
             .HasColumnName("name")
@@ -44,7 +44,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired()
             .HasMaxLength(1000);
 
-        builder.Property(s => s.PricePerUnit)
+        builder.Property(s => s.Price)
             .HasColumnName("price_per_unit")
             .IsRequired();
 

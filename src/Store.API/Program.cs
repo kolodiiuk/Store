@@ -3,6 +3,7 @@ using Store.API;
 using Store.DataAccess;
 using Store.Domain;
 using Microsoft.EntityFrameworkCore;
+using Store.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options
-        .UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));
+     options
+         .UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));
 
 builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
@@ -40,18 +41,20 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseAuthorization();
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        await DataSeeder.SeedAsync(services);
-    }
-    catch (Exception ex)
-    {
-        Debug.WriteLine(ex.Message, ex.StackTrace);
-    }
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var services = scope.ServiceProvider;
+//     try
+//     {
+//         await DataSeeder.SeedAsync(services);
+//     }
+//     catch (Exception ex)
+//     {
+//         Debug.WriteLine(ex.Message, ex.StackTrace);
+//     }
+// }
+
+// app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 app.MapControllers();

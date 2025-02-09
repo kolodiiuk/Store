@@ -40,7 +40,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .IsRequired();
 
         builder.Property(oi => oi.ProductId)
-            .HasColumnName("service_id");
+            .HasColumnName("product_id");
 
         builder.Property(oi => oi.OrderId)
             .HasColumnName("order_id");

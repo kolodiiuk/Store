@@ -8,7 +8,7 @@ public class ProductCouponConfiguration : IEntityTypeConfiguration<ProductCoupon
 {
     public void Configure(EntityTypeBuilder<ProductCoupon> builder)
     {
-        builder.ToTable("service_coupon");
+        builder.ToTable("product_coupon");
 
         builder.HasKey(sc => sc.Id);
         
@@ -25,10 +25,10 @@ public class ProductCouponConfiguration : IEntityTypeConfiguration<ProductCoupon
             .OnDelete(DeleteBehavior.Cascade);
         
         builder.Property(sc => sc.Id)
-            .HasColumnName("service_coupon_id");
+            .HasColumnName("product_coupon_id");
         
         builder.Property(sc => sc.ProductId)
-            .HasColumnName("service_id");
+            .HasColumnName("product_id");
 
         builder.Property(sc => sc.CouponId)
             .HasColumnName("coupon_id");

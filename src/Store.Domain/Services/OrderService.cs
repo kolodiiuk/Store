@@ -119,7 +119,7 @@ public class OrderService : IOrderService
             serviceResult.OnFailure(() => 
                 throw new InvalidOperationException($"Product not found: {serviceResult.Error}"));
 
-            var currUnitPrice = serviceResult.Value.PricePerUnit;
+            var currUnitPrice = serviceResult.Value.Price;
             var orderItem = new OrderItem
             {
                 OrderId = orderId,
