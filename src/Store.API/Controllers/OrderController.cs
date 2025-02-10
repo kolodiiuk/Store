@@ -19,115 +19,76 @@ public class OrderController : ControllerBase
     [HttpGet("all")]
     public async Task<ActionResult<List<Order>>> GetAllOrdersAsync()
     {
-        try
-        {
-            var orders = await _orderService.GetAllOrdersAsync();
-            if (orders == null)
-            {
-                return Ok(new List<Order>());
-            }
+        var orders = await _orderService.GetAllOrdersAsync();
 
-            return Ok(orders);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem getting all orders: {e.Message}" });
-        }
+        return Ok(orders);
     }
 
     [HttpGet("user/{userId:int}")]
     public async Task<ActionResult<List<Order>>> GetUserOrdersAsync(int userId)
     {
-        try
+        if (userId < 1)
         {
-            var orders = await _orderService.GetUserOrdersAsync(userId);
-            if (orders == null)
-            {
-                return Ok(new List<Order>());
-            }
+            return BadRequest(new ProblemDetails() { Title = "Invalid user id." });
+        }
+        
+        var orders = await _orderService.GetUserOrdersAsync(userId);
 
-            return Ok(orders);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem getting user {userId} orders: {e.Message}" });
-        }
+        return Ok(orders);
     }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Order>> GetOrderAsync(int id)
     {
-        try
+        if (id < 1)
         {
-            var order = await _orderService.GetOrderAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
+            return BadRequest(new ProblemDetails() { Title = "Invalid order id." });
+        }
+        
+        var order = await _orderService.GetOrderAsync(id);
+        if (order == null)
+        {
+            return NotFound();
+        }
 
-            return Ok(order);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem getting an {nameof(Order)} {id}: {e.Message}" });
-        }
+        return Ok(order);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Order>> PlaceOrderAsync([FromBody] CreateOrderDto orderDto)
+    public async Task<ActionResult<Order>> PlaceOrderAsync(CreateOrderDto orderDto)
     {
         if (orderDto == null)
         {
             return BadRequest(new ProblemDetails() { Title = "Invalid order data" });
         }
 
-        try
-        {
-            var order = await _orderService.PlaceOrderAsync(orderDto);
+        var order = await _orderService.PlaceOrderAsync(orderDto);
 
-            return CreatedAtRoute(new { order.Id }, order);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem placing an order: {e.Message}" });
-        }
+        return CreatedAtRoute(new { order.Id }, order);
     }
 
     [HttpPut]
     public async Task<ActionResult> UpdateOrder(Order order)
     {
-        try
-        {
-            await _orderService.UpdateOrderAsync(order);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem  updating an order {order.Id}: {e.Message}" });
-        }
+        await _orderService.UpdateOrderAsync(order);
+
+        return Ok();
     }
 
     [HttpGet("orderItems/{orderId:int}")]
     public async Task<ActionResult<List<OrderItem>>> GetOrderItems(int orderId)
     {
-        if (orderId < 0)
+        if (orderId < 1)
         {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Invalid orderId: {orderId}" });
+            return BadRequest(new ProblemDetails() { Title = $"Invalid orderId: {orderId}" });
         }
-        try
-        {
-            var orderItems = await _orderService.GetOrderItemsAsync(orderId);
-            if (orderItems == null)
-            {
-                return Ok(new List<OrderItem>());
-            }
 
-            return Ok(orderItems);
-        }
-        catch (Exception e)
+        var orderItems = await _orderService.GetOrderItemsAsync(orderId);
+        if (orderItems == null)
         {
-            return BadRequest(new ProblemDetails()
-                { Title = $"Problem getting order items for order {orderId}: {e.Message}" });
+            return Ok(new List<OrderItem>());
         }
+
+        return Ok(orderItems);
     }
 }

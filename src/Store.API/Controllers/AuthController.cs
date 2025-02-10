@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Store.Domain.Contracts.Services;
 using Store.Domain.Entities;
 using Store.Domain.Enums;
@@ -28,16 +29,9 @@ public class AuthController : ControllerBase
             return BadRequest(new ProblemDetails() { Title = $"Invalid user data" });
         }
 
-        try
-        {
-            var result = await _authService.LoginAsync(loginDto.Email, loginDto.Password);
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails()
-                { Title = $"Problem logging in a user {loginDto.Email}: {e.Message}" });
-        }
+        var result = await _authService.LoginAsync(loginDto.Email, loginDto.Password);
+
+        return Ok(result);
     }
 
     [HttpPost("register")]
@@ -48,57 +42,39 @@ public class AuthController : ControllerBase
             return BadRequest(new ProblemDetails() { Title = "Invalid register data" });
         }
 
-        try
-        {
-            var user = _mapper.Map<User>(registerDto);
-            user.Role = Role.User;
-            var userId = await _authService.RegisterAsync(user);
-            return CreatedAtAction(nameof(GetUserAsync), new { id = userId }, null);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Problem registering a new user: {e.Message}" });
-        }
+        var user = _mapper.Map<User>(registerDto);
+        user.Role = Role.User;
+        var userId = await _authService.RegisterAsync(user);
+
+        return CreatedAtAction(nameof(GetUserAsync), new { id = userId }, null);
     }
 
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetUsersAsync()
     {
-        try
+        var users = await _authService.GetAllUsersAsync();
+        if (users == null)
         {
-            var users = await _authService.GetAllUsersAsync();
-            if (users == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
 
-            return Ok(users.ToArray());
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Problem getting all users: {e.Message}" });
-        }
+        return Ok(users.ToArray());
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<User>> GetUserAsync(int id)
     {
-        try
+        if (id < 1)
         {
-            var user = await _authService.GetUserAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            return BadRequest(new ProblemDetails() {Title = "Invalid user id."});
+        }
+        
+        var user = await _authService.GetUserAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
 
-            return Ok(user);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Problem getting a {nameof(User)} {id}: {e.Message}" });
-        }
+        return Ok(user);
     }
 }

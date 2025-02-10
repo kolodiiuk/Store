@@ -23,81 +23,55 @@ public class BasketController : ControllerBase
     [HttpGet("{userId:int}")]
     public async Task<ActionResult<List<BasketItem>>> GetBasketAsync(int userId)
     {
-        try
+        if (userId < 1)
         {
-            var basket = await _basketService.GetBasketItemsAsync(userId);
-            if (basket == null)
-            {
-                return BadRequest(new ProblemDetails()
-                    {Title = $"No basket of a user {userId}"});
-            }
+            return BadRequest(new ProblemDetails() { Title = "Invalid userId" });
+        }
+        
+        var basket = await _basketService.GetBasketItemsAsync(userId);
 
-            return Ok(basket.ToArray());
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Problem getting a basket for {userId}: {e.Message}" });
-        }
+        return Ok(basket.ToArray());
     }
 
     [HttpPost]
-    public async Task<ActionResult<BasketItem>> AddToBasketAsync(
-        [FromBody] CreateBasketItemDto basketItemDto)
+    public async Task<ActionResult<BasketItem>> AddToBasketAsync(CreateBasketItemDto basketItemDto)
     {
         if (basketItemDto == null)
         {
             return BadRequest(new ProblemDetails() { Title = "Invalid basket item data" });
         }
 
-        try
-        {
-            var basketItem = _mapper.Map<BasketItem>(basketItemDto);
+        var basketItem = _mapper.Map<BasketItem>(basketItemDto);
+        var basketItemId = await _basketService.AddItemToBasketAsync(basketItem);
 
-            var basketItemId = await _basketService.AddItemToBasketAsync(basketItem);
-            return CreatedAtAction(nameof(AddToBasketAsync), new { BasketItemId = basketItemId }, basketItem);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Problem adding basket item: {e.Message}" });
-        }
+        return CreatedAtAction(nameof(AddToBasketAsync), 
+            new { BasketItemId = basketItemId }, basketItem);
     }
 
     [HttpPut("quantity")]
-    public async Task<ActionResult> UpdateQuantityAsync(
-        [FromBody] UpdateQuantityDto updateQuantityDto)
+    public async Task<ActionResult> UpdateQuantityAsync(UpdateQuantityDto updateQuantityDto)
     {
         if (updateQuantityDto == null)
         {
             return BadRequest(new ProblemDetails() { Title = "Invalid quantity data" });
         }
 
-        try
-        {
-            await _basketService.UpdateQuantityAsync(
-                updateQuantityDto.BasketItemId, updateQuantityDto.NewValue);
-            return NoContent();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails()
-                { Title = $"Problem updating quantity for basket item {updateQuantityDto.BasketItemId}: {e.Message}" });
-        }
+        await _basketService.UpdateQuantityAsync(
+            updateQuantityDto.BasketItemId, updateQuantityDto.NewValue);
+
+        return NoContent();
     }
 
     [HttpDelete("{basketItemId:int}")]
     public async Task<ActionResult> DeleteBasketItemAsync(int basketItemId)
     {
-        try
+        if (basketItemId < 1)
         {
-            await _basketService.DeleteItemFromBasketAsync(basketItemId);
-            return NoContent();
+            return BadRequest(new ProblemDetails() { Title = "Invalid userId" });
         }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Problem deleting basket item: {e.Message}" });
-        }
+        
+        await _basketService.DeleteItemFromBasketAsync(basketItemId);
+
+        return NoContent();
     }
 }

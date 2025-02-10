@@ -28,6 +28,7 @@ public class BasketService : IBasketService
         {
             throw new ArgumentNullException(nameof(basketItem));
         }
+        
         var result = await _basketRepository.CreateAsync(basketItem);
         result.OnFailure(() => throw new Exception(result.Error));
 
@@ -36,10 +37,11 @@ public class BasketService : IBasketService
 
     public async Task UpdateQuantityAsync(int basketItemId, int newValue)
     {
-        if (newValue < 0)
+        if (newValue < 1)
         {
-            throw new ArgumentException("Quantity can't be negative", nameof(newValue));
+            throw new ArgumentException("Quantity can't be negative or 0", nameof(newValue));
         }
+        
         var result = await _basketRepository.GetByIdAsync(basketItemId);
         result.OnFailure(() => throw new Exception(result.Error));
         if (result.Value == null)

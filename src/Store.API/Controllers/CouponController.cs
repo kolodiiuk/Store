@@ -44,12 +44,11 @@ public class CouponController : ControllerBase
             couponDtos.Add(dto);
         }
 
-
         return Ok(couponDtos);
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> CreateCouponAsync([FromBody] CreateCouponDto couponDto)
+    public async Task<ActionResult<int>> CreateCouponAsync(CreateCouponDto couponDto)
     {
         if (couponDto == null)
         {
@@ -57,40 +56,30 @@ public class CouponController : ControllerBase
         }
 
         var coupon = _mapper.Map<Coupon>(couponDto);
+        var couponId = await _couponService.CreateCouponAsync(coupon, couponDto.ProductIds);
 
-        try
-        {
-            var couponId = await _couponService.CreateCouponAsync(coupon, couponDto.ProductIds);
-
-            return Ok(couponId);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(couponId);
     }
 
     [HttpPost("code")]
     public async Task<ActionResult> ValidateCouponAsync([FromBody] string code)
     {
-        try
+        if (string.IsNullOrWhiteSpace(code))
         {
-            var isValid = await _couponService.ValidateCouponAsync(code);
-            if (!isValid)
-            {
-                return BadRequest($"No such coupon {code}");
-            }
+            return BadRequest(new ProblemDetails() { Title = "Invalid code data." });
+        }
+        
+        var isValid = await _couponService.ValidateCouponAsync(code);
+        if (!isValid)
+        {
+            return BadRequest($"No such coupon {code}");
+        }
 
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok();
     }
 
     [HttpPut]
-    public async Task<ActionResult<Coupon>> UpdateCouponAsync([FromBody] UpdateCouponDto couponDto)
+    public async Task<ActionResult<Coupon>> UpdateCouponAsync(UpdateCouponDto couponDto)
     {
         if (couponDto == null)
         {
@@ -98,31 +87,21 @@ public class CouponController : ControllerBase
         }
 
         var coupon = _mapper.Map<Coupon>(couponDto);
+        await _couponService.UpdateCouponAsync(coupon, couponDto.ProductIds ?? new List<int>());
 
-        try
-        {
-            await _couponService.UpdateCouponAsync(coupon, couponDto.ProductIds ?? new List<int>());
-
-            return Ok(coupon);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(coupon);
     }
 
     [HttpDelete("{couponId:int}")]
     public async Task<ActionResult> DeleteCouponAsync(int couponId)
     {
-        try
+        if (couponId < 1)
         {
-            await _couponService.DeleteCouponAsync(couponId);
+            return BadRequest(new ProblemDetails() { Title = "Invalid coupon id" });
+        }
+        
+        await _couponService.DeleteCouponAsync(couponId);
 
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return NoContent();
     }
 }

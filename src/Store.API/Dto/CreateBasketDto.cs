@@ -6,9 +6,3 @@ public class CreateBasketItemDto
     public int ProductId { get; set; }
     public int UserId { get; set; }
 }
-
-public class UpdateQuantityDto
-{
-    public int BasketItemId { get; set; }
-    public int NewValue { get; set; }
-}

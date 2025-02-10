@@ -31,7 +31,7 @@ public class ExceptionHandlerMiddleware
             var error = new
             {
                 Id = errorId,
-                ErrorMessage = "Something went wrong! We are looking into resolving this."
+                ErrorMessage = "Internal server error."
             };
 
             var requestPath = httpContext.Request.Path.ToString();
