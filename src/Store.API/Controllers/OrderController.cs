@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Store.Domain.Contracts.Services;
 using Store.Domain.Entities;
 using Store.Domain.Utils;
@@ -15,7 +16,8 @@ public class OrderController : ControllerBase
     {
         _orderService = orderService;
     }
-
+    
+    [Authorize(Roles = "Admin")]
     [HttpGet("all")]
     public async Task<ActionResult<List<Order>>> GetAllOrdersAsync()
     {
@@ -23,7 +25,8 @@ public class OrderController : ControllerBase
 
         return Ok(orders);
     }
-
+    
+    [Authorize(Roles = "Admin, AuthCustomer")]
     [HttpGet("user/{userId:int}")]
     public async Task<ActionResult<List<Order>>> GetUserOrdersAsync(int userId)
     {
@@ -36,7 +39,8 @@ public class OrderController : ControllerBase
 
         return Ok(orders);
     }
-
+    
+    [Authorize(Roles = "Admin, AuthCustomer")]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Order>> GetOrderAsync(int id)
     {
@@ -53,7 +57,8 @@ public class OrderController : ControllerBase
 
         return Ok(order);
     }
-
+    
+    [Authorize(Roles = "AuthCustomer")]
     [HttpPost]
     public async Task<ActionResult<Order>> PlaceOrderAsync(CreateOrderDto orderDto)
     {
@@ -66,7 +71,8 @@ public class OrderController : ControllerBase
 
         return CreatedAtRoute(new { order.Id }, order);
     }
-
+    
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<ActionResult> UpdateOrder(Order order)
     {
@@ -74,7 +80,8 @@ public class OrderController : ControllerBase
 
         return Ok();
     }
-
+    
+    [Authorize(Roles = "Admin, AuthCustomer")]
     [HttpGet("orderItems/{orderId:int}")]
     public async Task<ActionResult<List<OrderItem>>> GetOrderItems(int orderId)
     {

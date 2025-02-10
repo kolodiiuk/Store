@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Store.DataAccess.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T>
-    where T : BaseEntity
+public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 {
     protected readonly AppDbContext _context;
 
@@ -15,7 +14,7 @@ public class GenericRepository<T> : IGenericRepository<T>
     {
         _context = context;
     }
-
+    
     public async Task<Result<IEnumerable<T>>> GetAllAsync()
     {
         try

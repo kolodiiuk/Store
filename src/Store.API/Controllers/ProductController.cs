@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Store.Domain.Contracts.Services;
 using Store.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace Store.API.Controllers;
 public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
+    
     private readonly IMapper _mapper;
 
     public ProductController(IProductService productService, IMapper mapper)
@@ -18,7 +20,8 @@ public class ProductController : ControllerBase
         _productService = productService;
         _mapper = mapper;
     }
-
+    
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("all")]
     public async Task<ActionResult<List<Product>>> GetProductsAsync()
@@ -59,6 +62,7 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProductAsync(CreateProductDto productDto)
     {
@@ -74,6 +78,7 @@ public class ProductController : ControllerBase
         return CreatedAtAction(nameof(CreateProductAsync), new { product.Id }, product);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<ActionResult<Product>> UpdateProductAsync(UpdateProductDto productDto)
     {
@@ -94,6 +99,7 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProductAsync(int id)
     {

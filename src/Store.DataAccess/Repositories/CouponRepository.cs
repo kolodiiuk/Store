@@ -67,14 +67,7 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
             coupon.ProductCoupons = new List<ProductCoupon>();
             if (serviceIds != null)
             {
-                foreach (var serviceId in serviceIds)
-                {
-                    coupon.ProductCoupons.Add(new ProductCoupon
-                    {
-                        ProductId = serviceId,
-                        CouponId = coupon.Id
-                    });
-                }
+                AddRelationToServices(coupon, serviceIds);
             }
 
             await _context.Coupons.AddAsync(coupon);
@@ -85,6 +78,18 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
         catch (Exception e)
         {
             return Result.Fail<int>($"Failure creating coupon: {e.Message}");
+        }
+
+        void AddRelationToServices(Coupon couponToAdd, IEnumerable<int> enumerable)
+        {
+            foreach (var serviceId in enumerable)
+            {
+                couponToAdd.ProductCoupons.Add(new ProductCoupon
+                {
+                    ProductId = serviceId,
+                    CouponId = couponToAdd.Id
+                });
+            }
         }
     }
 

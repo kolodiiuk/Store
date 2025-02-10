@@ -2,6 +2,6 @@ namespace Store.Domain.Enums;
 
 public enum PaymentMethod
 {
-    Cash,
-    CreditCard,
+    Cash = 0,
+    CreditCard = 1,
 }

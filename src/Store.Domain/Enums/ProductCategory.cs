@@ -2,8 +2,8 @@
 
 public enum ProductCategory
 {
-    Washing,
-    DryCleaning,
-    Ironing,
-    AddOn,
+    Washing = 0,
+    DryCleaning = 1,
+    Ironing = 2,
+    AddOn = 3,
 }

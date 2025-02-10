@@ -20,6 +20,7 @@ public static class ResultExtensions
         }
 
         action();
+        
         return Result.Success();
     }
 

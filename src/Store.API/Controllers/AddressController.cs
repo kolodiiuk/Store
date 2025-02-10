@@ -12,6 +12,7 @@ namespace Store.API.Controllers;
 public class AddressController : ControllerBase
 {
     private readonly IAddressService _addressService;
+    
     private readonly IMapper _mapper;
 
     public AddressController(IAddressService addressService, IMapper mapper)
@@ -27,7 +28,7 @@ public class AddressController : ControllerBase
         return Ok(await _addressService.GetAllAddressesAsync());
     }
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "AuthCustomer")]
     [HttpGet("user/{userId:int}")]
     public async Task<ActionResult<List<Address>>> GetUserAddressesAsync(int userId)
     {
@@ -39,7 +40,7 @@ public class AddressController : ControllerBase
         return Ok(await _addressService.GetUserAddressesAsync(userId));
     }
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "AuthCustomer")]
     [HttpPost]
     public async Task<ActionResult<Address>> CreateAddressAsync(CreateAddressDto addressDto)
     {
@@ -55,7 +56,7 @@ public class AddressController : ControllerBase
         return CreatedAtAction(nameof(CreateAddressAsync), new { address.Id }, address);
     }
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "AuthCustomer")]
     [HttpPut]
     public async Task<ActionResult> UpdateAddressAsync(UpdateAddressDto addressDto)
     {
@@ -77,7 +78,7 @@ public class AddressController : ControllerBase
         return Ok(address);
     }
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "AuthCustomer")]
     [HttpDelete("{addressId:int}")]
     public async Task<ActionResult> DeleteAddressAsync(int addressId)
     {

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Store.Domain.Contracts.Services;
 using Store.Domain.Entities;
 using Store.Domain.Utils;
@@ -12,6 +13,7 @@ namespace Store.API.Controllers;
 public class CouponController : ControllerBase
 {
     private readonly ICouponService _couponService;
+    
     private readonly IMapper _mapper;
 
     public CouponController(ICouponService couponService, IMapper mapper)
@@ -19,7 +21,8 @@ public class CouponController : ControllerBase
         _couponService = couponService;
         _mapper = mapper;
     }
-
+    
+    [Authorize(Roles = "Admin")]
     [HttpGet(Name = "all")]
     public async Task<ActionResult<List<UpdateCouponDto>>> GetCouponsAsync()
     {
@@ -47,6 +50,7 @@ public class CouponController : ControllerBase
         return Ok(couponDtos);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<int>> CreateCouponAsync(CreateCouponDto couponDto)
     {
@@ -61,6 +65,7 @@ public class CouponController : ControllerBase
         return Ok(couponId);
     }
 
+    [Authorize(Roles = "AuthCustomer")]
     [HttpPost("code")]
     public async Task<ActionResult> ValidateCouponAsync([FromBody] string code)
     {
@@ -77,7 +82,8 @@ public class CouponController : ControllerBase
 
         return Ok();
     }
-
+    
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<ActionResult<Coupon>> UpdateCouponAsync(UpdateCouponDto couponDto)
     {
@@ -91,7 +97,8 @@ public class CouponController : ControllerBase
 
         return Ok(coupon);
     }
-
+    
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{couponId:int}")]
     public async Task<ActionResult> DeleteCouponAsync(int couponId)
     {

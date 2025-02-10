@@ -5,9 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Store.DataAccess.Repositories;
 
-public class ProductRepository(AppDbContext context) 
-    : GenericRepository<Product>(context), IProductRepository
+public class ProductRepository : GenericRepository<Product>, IProductRepository
 {
+    public ProductRepository(AppDbContext context) : base(context)
+    {
+    }
+
     public async Task<Result<IEnumerable<Product>>> GetAllAvailableProductsAsync()
     {
         try

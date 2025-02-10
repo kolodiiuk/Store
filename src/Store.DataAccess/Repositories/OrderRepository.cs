@@ -5,8 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Store.DataAccess.Repositories;
 
-public class OrderRepository(AppDbContext context) : GenericRepository<Order>(context), IOrderRepository
+public class OrderRepository : GenericRepository<Order>, IOrderRepository
 {
+    public OrderRepository(AppDbContext context) : base(context)
+    {
+    }
+
     public async Task<Result<IEnumerable<Order>>> GetOrdersOfUser(int userId)
     {
         try

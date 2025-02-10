@@ -2,6 +2,6 @@ namespace Store.Domain.Enums;
 
 public enum PaymentStatus
 {
-    NotPaid,
-    Paid,
+    NotPaid = 0,
+    Paid = 1,
 }

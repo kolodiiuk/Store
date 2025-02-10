@@ -5,8 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Store.DataAccess.Repositories;
 
-public class FeedbackRepository(AppDbContext context) : GenericRepository<Feedback>(context), IFeedbackRepository
+public class FeedbackRepository : GenericRepository<Feedback>, IFeedbackRepository
 {
+    public FeedbackRepository(AppDbContext context) : base(context)
+    {
+    }
+
     public async Task<Result<IEnumerable<Feedback>>> GetFeedbacksForOrder(int orderId)
     {
         try

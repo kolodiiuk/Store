@@ -5,7 +5,9 @@ namespace Store.Domain.Utils;
 public class PasswordHasher
 {
     private const int SaltSize = 16;
+    
     private const int HashSize = 32;
+    
     private const int Iterations = 100;//_000;
 
     private readonly string _password;
@@ -16,16 +18,10 @@ public class PasswordHasher
     }
     
     public string Hash { get; private set; }
+    
     public string Salt { get; private set; }
     
-    public void HashPassword(string password)
-    {
-        var salt = GenerateSalt(SaltSize);
-        var hash = PBKDF2Hash(password, salt);
-        Salt = Convert.ToBase64String(salt);
-        Hash = Convert.ToBase64String(hash);
-    }
-
+    
     public static bool VerifyPassword(
         string password, string storedHash, string storedSalt)
     {
@@ -33,6 +29,14 @@ public class PasswordHasher
         var hash = PBKDF2Hash(password, salt);
         
         return Convert.ToBase64String(hash) == storedHash;
+    }
+    
+    public void HashPassword(string password)
+    {
+        var salt = GenerateSalt(SaltSize);
+        var hash = PBKDF2Hash(password, salt);
+        Salt = Convert.ToBase64String(salt);
+        Hash = Convert.ToBase64String(hash);
     }
 
     private static byte[] GenerateSalt(int length)

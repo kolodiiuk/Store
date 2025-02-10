@@ -5,8 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Store.DataAccess.Repositories;
 
-public class BasketRepository(AppDbContext context) : GenericRepository<BasketItem>(context), IBasketRepository
+public class BasketRepository : GenericRepository<BasketItem>, IBasketRepository
 {
+    public BasketRepository(AppDbContext context) : base(context)
+    {
+    }
+
     public async Task<Result<IEnumerable<BasketItem>>> GetUserBasketAsync(int userId)
     {
         try

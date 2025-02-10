@@ -5,8 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Store.DataAccess.Repositories;
 
-public class AddressRepository(AppDbContext context) : GenericRepository<Address>(context), IAddressRepository
+public class AddressRepository : GenericRepository<Address>, IAddressRepository
 {
+    public AddressRepository(AppDbContext context) : base(context)
+    {
+    }
+
     public async Task<Result<IEnumerable<Address>>> GetUserAddresses(int userId)
     {
         try

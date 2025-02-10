@@ -2,9 +2,9 @@ namespace Store.Domain.Enums;
 
 public enum UnitType
 {
-    Piece, 
-    Kg, 
-    SquareMeters, 
-    Load, 
-    Pair 
+    Piece = 0, 
+    Kg = 1, 
+    SquareMeters = 2, 
+    Load = 3, 
+    Pair = 4,
 }

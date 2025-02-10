@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Store.Domain.Contracts.Services;
 using Store.Domain.Entities;
@@ -13,6 +14,7 @@ namespace Store.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+   
     private readonly IMapper _mapper;
 
     public AuthController(IAuthService authService, IMapper mapper)
@@ -33,7 +35,14 @@ public class AuthController : ControllerBase
 
         return Ok(result);
     }
-
+    
+    [Authorize(Roles= "AuthCustomer, Admin")]
+    [HttpPost("logout")]
+    public async Task<ActionResult> LogoutAsync(LogoutDto dto)
+    {
+        throw new NotImplementedException();
+    }
+    
     [HttpPost("register")]
     public async Task<ActionResult<int>> RegisterAsync(RegisterDto registerDto)
     {
@@ -49,6 +58,7 @@ public class AuthController : ControllerBase
         return CreatedAtAction(nameof(GetUserAsync), new { id = userId }, null);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetUsersAsync()
     {

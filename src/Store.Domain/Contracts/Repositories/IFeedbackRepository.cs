@@ -4,5 +4,4 @@ namespace Store.Domain.Contracts.Repositories;
 
 public interface IFeedbackRepository : IGenericRepository<Feedback>
 {
-    
 }

@@ -5,6 +5,7 @@ namespace Store.API.Middleware;
 public class ExceptionHandlerMiddleware
 {
     private readonly ILogger<ExceptionHandlerMiddleware> _logger;
+    
     private readonly RequestDelegate _next;
 
     public ExceptionHandlerMiddleware(ILogger<ExceptionHandlerMiddleware> logger,

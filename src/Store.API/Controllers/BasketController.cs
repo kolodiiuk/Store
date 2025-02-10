@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Store.Domain.Contracts.Services;
 using Store.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace Store.API.Controllers;
 public class BasketController : ControllerBase
 {
     private readonly IBasketService _basketService;
+    
     private readonly IMapper _mapper;
 
     public BasketController(IBasketService basketService,
@@ -19,7 +21,8 @@ public class BasketController : ControllerBase
         _basketService = basketService;
         _mapper = mapper;
     }
-
+    
+    [Authorize(Roles = "AuthCustomer")]
     [HttpGet("{userId:int}")]
     public async Task<ActionResult<List<BasketItem>>> GetBasketAsync(int userId)
     {
@@ -33,6 +36,7 @@ public class BasketController : ControllerBase
         return Ok(basket.ToArray());
     }
 
+    [Authorize(Roles = "AuthCustomer")]
     [HttpPost]
     public async Task<ActionResult<BasketItem>> AddToBasketAsync(CreateBasketItemDto basketItemDto)
     {
@@ -47,7 +51,8 @@ public class BasketController : ControllerBase
         return CreatedAtAction(nameof(AddToBasketAsync), 
             new { BasketItemId = basketItemId }, basketItem);
     }
-
+    
+    [Authorize(Roles = "AuthCustomer")]
     [HttpPut("quantity")]
     public async Task<ActionResult> UpdateQuantityAsync(UpdateQuantityDto updateQuantityDto)
     {
@@ -62,6 +67,7 @@ public class BasketController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "AuthCustomer")]
     [HttpDelete("{basketItemId:int}")]
     public async Task<ActionResult> DeleteBasketItemAsync(int basketItemId)
     {

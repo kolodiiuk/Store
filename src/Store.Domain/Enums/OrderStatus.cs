@@ -2,8 +2,8 @@ namespace Store.Domain.Enums;
 
 public enum OrderStatus
 {
-    Created,
-    Approved,
-    Collected,
-    Delivered,
+    Created = 0,
+    Approved = 1,
+    Collected = 2,
+    Delivered = 3,
 }

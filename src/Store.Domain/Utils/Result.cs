@@ -3,7 +3,9 @@ namespace Store.Domain.Utils;
 public class Result
 {
     public bool IsSuccess { get; }
+    
     public string Error { get; }
+    
     public bool Failure => !IsSuccess;
 
     protected Result(bool isSuccess, string error)
