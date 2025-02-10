@@ -10,9 +10,12 @@ namespace Store.Domain.Services;
 public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
+
     private readonly IOrderItemRepository _orderItemRepository;
+
     // private readonly IAddressRepository _addressRepository;
     private readonly IProductRepository _productRepository;
+
     // private readonly ICouponRepository _couponRepository;
     private readonly IUserRepository _userRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
@@ -64,8 +67,10 @@ public class OrderService : IOrderService
         {
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var userResult = await _userRepository.GetByIdAsync(order.UserId);
-            userResult.OnFailure(() => 
-                throw new InvalidOperationException("User doesn't exist"));
+            if (userResult.Value == null || userResult.Failure)
+            {
+                throw new InvalidOperationException("User doesn't exist");
+            }
 
             var newOrder = new Order
             {
@@ -84,24 +89,23 @@ public class OrderService : IOrderService
             };
 
             var result = await _orderRepository.CreateOrderAsync(newOrder);
-            result.OnFailure(() => 
+            result.OnFailure(() =>
                 throw new InvalidOperationException("Problem creating a new order record"));
             newOrder.Id = result.Value;
             if (order.HasCoupon)
             {
-                
             }
 
             var orderItems = await CreateOrderItems(order, newOrder.Id);
             newOrder.OrderItems = orderItems;
             newOrder.Subtotal = orderItems.Sum(oi => oi.Quantity * oi.CurrentUnitPrice);
             var updateResult = await _orderRepository.UpdateOrderAsync(newOrder);
-            updateResult.OnFailure (() =>
+            updateResult.OnFailure(() =>
                 throw new InvalidOperationException(
                     $"Problem updating order: {updateResult.Error}"));
 
             transaction.Complete();
-            
+
             return newOrder;
         }
         catch (Exception ex)
@@ -116,8 +120,10 @@ public class OrderService : IOrderService
         foreach (var itemDto in order.OrderItems)
         {
             var serviceResult = await _productRepository.GetByIdAsync(itemDto.ProductId);
-            serviceResult.OnFailure(() => 
-                throw new InvalidOperationException($"Product not found: {serviceResult.Error}"));
+            if (serviceResult.Value == null || serviceResult.Failure)
+            {
+                throw new InvalidOperationException($"Product not found: {serviceResult.Error}");
+            }
 
             var currUnitPrice = serviceResult.Value.Price;
             var orderItem = new OrderItem
@@ -149,7 +155,7 @@ public class OrderService : IOrderService
     {
         var result = await _orderRepository.GetOrderItemsAsync(orderId);
         result.OnFailure(() => throw new Exception(result.Error));
-        
+
         return result.Value;
     }
 }

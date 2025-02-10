@@ -30,17 +30,11 @@ public class UserRepository(AppDbContext context) : GenericRepository<User>(cont
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == password);
 
-            if (user == null)
-            {
-                return Result.Fail<User>("No such user");
-            }
-
             return Result.Success(user);
         }
         catch (Exception e)
         {
-            return Result.Fail<User>(
-                $"Error getting user {email}: {e.Message}");
+            return Result.Fail<User>($"Error getting user {email}: {e.Message}");
         }
     }
 }

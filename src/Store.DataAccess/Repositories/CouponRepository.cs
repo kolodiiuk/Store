@@ -19,11 +19,6 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
                 .Include(c => c.ProductCoupons)
                 .FirstOrDefaultAsync(c => c.Code == couponCode);
 
-            if (coupon == null)
-            {
-                return Result.Fail<Coupon>($"No such coupon {couponCode}");
-            }
-
             return Result.Success(coupon);
         }
         catch (Exception e)
@@ -39,11 +34,6 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
             var coupon = await _context.Coupons
                 .Include(c => c.ProductCoupons)
                 .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (coupon == null)
-            {
-                return Result.Fail<Coupon>($"Coupon with id {id} not found");
-            }
 
             return Result.Success(coupon);
         }
@@ -75,7 +65,6 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
         try
         {
             coupon.ProductCoupons = new List<ProductCoupon>();
-
             if (serviceIds != null)
             {
                 foreach (var serviceId in serviceIds)
@@ -101,48 +90,39 @@ public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
 
     public async Task<Result> UpdateCouponAsync(Coupon coupon, IEnumerable<int> serviceIds)
     {
-        // if (coupon == null || serviceIds == null)
-        // {
-        //     return Result.Fail("Invalid input data");
-        // }
-
-        using (var transaction = await _context.Database.BeginTransactionAsync())
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
         {
-            try
+            var existingCoupon = await _context.Coupons
+                .Include(c => c.ProductCoupons)
+                .FirstOrDefaultAsync(c => c.Id == coupon.Id);
+            if (existingCoupon == null)
             {
-                var existingCoupon = await _context.Coupons
-                    .Include(c => c.ProductCoupons)
-                    .FirstOrDefaultAsync(c => c.Id == coupon.Id);
-
-                if (existingCoupon == null)
-                {
-                    return Result.Fail($"Coupon with id {coupon.Id} not found");
-                }
-
-                _context.Entry(existingCoupon).CurrentValues.SetValues(coupon);
-
-                _context.ProductCoupons.RemoveRange(existingCoupon.ProductCoupons);
-
-                foreach (var serviceId in serviceIds)
-                {
-                    var serviceCoupon = new ProductCoupon
-                    {
-                        ProductId = serviceId,
-                        CouponId = coupon.Id
-                    };
-                    _context.ProductCoupons.Add(serviceCoupon);
-                }
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return Result.Success();
+                return Result.Fail($"Coupon with id {coupon.Id} not found");
             }
-            catch (Exception e)
+
+            _context.Entry(existingCoupon).CurrentValues.SetValues(coupon);
+            _context.ProductCoupons.RemoveRange(existingCoupon.ProductCoupons);
+            foreach (var serviceId in serviceIds)
             {
-                await transaction.RollbackAsync();
-                return Result.Fail($"Failure updating coupon {coupon.Id}: {e.Message}");
+                var serviceCoupon = new ProductCoupon
+                {
+                    ProductId = serviceId,
+                    CouponId = coupon.Id
+                };
+                _context.ProductCoupons.Add(serviceCoupon);
             }
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return Result.Success();
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            
+            return Result.Fail($"Failure updating coupon {coupon.Id}: {e.Message}");
         }
     }
 

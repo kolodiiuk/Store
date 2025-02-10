@@ -24,35 +24,24 @@ public class AddressController : ControllerBase
     [HttpGet("all")]
     public async Task<ActionResult<List<Address>>> GetAllAddressesAsync()
     {
-        try
-        {
-            return Ok(await _addressService.GetAllAddressesAsync());
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Problem getting all addresses: {e.Message}" });
-        }
+        return Ok(await _addressService.GetAllAddressesAsync());
     }
-    
+
     [Authorize(Roles = "User")]
     [HttpGet("user/{userId:int}")]
     public async Task<ActionResult<List<Address>>> GetUserAddressesAsync(int userId)
     {
-        try
+        if (userId < 1)
         {
-            return Ok(await _addressService.GetUserAddressesAsync(userId));
+            return BadRequest(new ProblemDetails() { Title = "Invalid address data" });
         }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() 
-                { Title = $"Problem getting a user {userId} addresses: {e.Message}" });
-        }
+        
+        return Ok(await _addressService.GetUserAddressesAsync(userId));
     }
 
     [Authorize(Roles = "User")]
     [HttpPost]
-    public async Task<ActionResult<Address>> CreateAddressAsync([FromBody] CreateAddressDto addressDto)
+    public async Task<ActionResult<Address>> CreateAddressAsync(CreateAddressDto addressDto)
     {
         if (addressDto == null)
         {
@@ -60,22 +49,15 @@ public class AddressController : ControllerBase
         }
 
         var address = _mapper.Map<Address>(addressDto);
-        try
-        {
-            int id = await _addressService.CreateAddressAsync(address);
-            address.Id = id;
+        int id = await _addressService.CreateAddressAsync(address);
+        address.Id = id;
 
-            return CreatedAtAction(nameof(CreateAddressAsync), new { address.Id }, address);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem creating a new address: {e.Message}" });
-        }
+        return CreatedAtAction(nameof(CreateAddressAsync), new { address.Id }, address);
     }
 
     [Authorize(Roles = "User")]
     [HttpPut]
-    public async Task<ActionResult> UpdateAddressAsync([FromBody] UpdateAddressDto addressDto)
+    public async Task<ActionResult> UpdateAddressAsync(UpdateAddressDto addressDto)
     {
         if (addressDto == null)
         {
@@ -85,40 +67,28 @@ public class AddressController : ControllerBase
         var address = await _addressService.GetAddressByIdAsync(addressDto.Id);
         if (address == null)
         {
-            return BadRequest(new ProblemDetails() 
-                {Title = $"No address {addressDto.Id}"});
+            return BadRequest(new ProblemDetails()
+                { Title = $"No address {addressDto.Id}" });
         }
 
         _mapper.Map(addressDto, address);
-        try
-        {
-            await _addressService.UpdateAddressAsync(address);
-            return Ok(address);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem updating an address: {e.Message}" });
-        }
+        await _addressService.UpdateAddressAsync(address);
+
+        return Ok(address);
     }
 
     [Authorize(Roles = "User")]
     [HttpDelete("{addressId:int}")]
     public async Task<ActionResult> DeleteAddressAsync(int addressId)
     {
-        if (addressId < 0)
+        if (addressId < 1)
         {
             return BadRequest(new ProblemDetails()
                 { Title = "Invalid address data", Detail = "addressId < 0" });
         }
 
-        try
-        {
-            await _addressService.DeleteAddressAsync(addressId);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new ProblemDetails() { Title = $"Problem deleting an address {addressId}: {e.Message}" });
-        }
+        await _addressService.DeleteAddressAsync(addressId);
+
+        return Ok();
     }
 }

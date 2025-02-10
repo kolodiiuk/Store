@@ -22,8 +22,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-     options
-         .UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));
+    options
+        .UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));
 
 builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
@@ -40,7 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseAuthorization();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseAuthorization();
+app.UseAuthentication();
 // using (var scope = app.Services.CreateScope())
 // {
 //     var services = scope.ServiceProvider;
@@ -54,7 +56,6 @@ if (app.Environment.IsDevelopment())
 //     }
 // }
 
-// app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 app.MapControllers();

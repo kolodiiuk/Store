@@ -41,10 +41,6 @@ public class OrderRepository(AppDbContext context) : GenericRepository<Order>(co
                 .Include(o => o.Address)
                 .Include(o => o.Coupon)
                 .FirstOrDefaultAsync();
-            if (order == null)
-            {
-                return Result.Fail<Order>($"No order {orderId}");
-            }
             
             return Result.Success(order);
         }

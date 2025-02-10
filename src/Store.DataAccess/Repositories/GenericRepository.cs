@@ -35,10 +35,6 @@ public class GenericRepository<T> : IGenericRepository<T>
         try
         {
             var entity = await _context.Set<T>().FindAsync(id);
-            if (entity == null)
-            {
-                return Result.Fail<T>($"No entity {id}");
-            }
             
             return Result.Success(entity);
         }
