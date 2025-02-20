@@ -1,3 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -5,7 +8,9 @@ using Store.Domain.Contracts.Services;
 using Store.Domain.Entities;
 using Store.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Store.API.Dto;
+using Store.Services.Services;
 
 namespace Store.API.Controllers;
 
@@ -16,13 +21,21 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
    
     private readonly IMapper _mapper;
-
+    
     public AuthController(IAuthService authService, IMapper mapper)
     {
         _authService = authService;
         _mapper = mapper;
     }
 
+    [HttpPost("google-login")]
+    public async Task<ActionResult<AuthResponse>> GoogleLogin([FromBody] GoogleLoginRequest request)
+    {
+
+        // 8. Return JWT token to frontend
+        return Ok();
+    }
+    
     [HttpPost("login")]
     public async Task<ActionResult<User>> LoginAsync(LoginDto loginDto)
     {

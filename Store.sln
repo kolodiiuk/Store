@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{71DF6EE5-131
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Domain", "src\Store.Domain\Store.Domain.csproj", "{56AAA7E7-9C16-4D16-9B4F-A94A4B181B5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.DataAccess", "src\Store.DataAccess\Store.DataAccess.csproj", "{B45E55CB-26BF-4256-80BA-B9972BBBE1B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Infrastructure", "src\Store.Infrastructure\Store.Infrastructure.csproj", "{B45E55CB-26BF-4256-80BA-B9972BBBE1B2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.API", "src\Store.API\Store.API.csproj", "{49C85242-8ED8-4502-B95F-B2FF071631FF}"
 EndProject
@@ -19,6 +19,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9073A7D6-915F-4F42-951D-F9DE1B84A943}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Tests", "tests\Store.Tests\Store.Tests.csproj", "{B71B122E-7A2D-4477-A008-EEDE9662B74A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Services", "Store.Services\Store.Services.csproj", "{F3A34CFF-96BF-42B5-9B08-CBA1301997AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{B71B122E-7A2D-4477-A008-EEDE9662B74A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B71B122E-7A2D-4477-A008-EEDE9662B74A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B71B122E-7A2D-4477-A008-EEDE9662B74A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A34CFF-96BF-42B5-9B08-CBA1301997AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A34CFF-96BF-42B5-9B08-CBA1301997AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A34CFF-96BF-42B5-9B08-CBA1301997AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A34CFF-96BF-42B5-9B08-CBA1301997AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,5 +57,6 @@ Global
 		{B45E55CB-26BF-4256-80BA-B9972BBBE1B2} = {71DF6EE5-131D-4D2C-ACE4-EA7C354843B6}
 		{49C85242-8ED8-4502-B95F-B2FF071631FF} = {71DF6EE5-131D-4D2C-ACE4-EA7C354843B6}
 		{B71B122E-7A2D-4477-A008-EEDE9662B74A} = {9073A7D6-915F-4F42-951D-F9DE1B84A943}
+		{F3A34CFF-96BF-42B5-9B08-CBA1301997AD} = {71DF6EE5-131D-4D2C-ACE4-EA7C354843B6}
 	EndGlobalSection
 EndGlobal

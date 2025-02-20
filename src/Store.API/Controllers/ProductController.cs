@@ -39,8 +39,9 @@ public class ProductController : ControllerBase
     [Route("available")]
     public async Task<ActionResult<List<Product>>> GetAvailableProductsAsync()
     {
+        throw new Exception();
         var products = await _productService.GetAvailableProductsAsync();
-
+        
         return Ok(products);
     }
 

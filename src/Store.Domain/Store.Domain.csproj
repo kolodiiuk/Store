@@ -8,6 +8,8 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation" Version="11.11.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="Stripe.net" Version="47.2.0"/>
         <!-- Add the correct BouncyCastle adapter for iText 7 -->
     </ItemGroup>
